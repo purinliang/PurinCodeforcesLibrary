@@ -40,6 +40,6 @@ int main () {
     for (int i = 1; i <= t; ++i) {
         purin_solve ();
     }
-#endif  // LOCAL
+#endif
     return 0;
 }
