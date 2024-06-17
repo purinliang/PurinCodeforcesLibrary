@@ -26,17 +26,14 @@ struct Treap {
             max = _val;
         }
 
-        void Show (int u = -1) {
-            const char INTENT[] = "  ";
-            printf ("%s", INTENT);
-            printf ("{");
-            // printf ("u = %d, ", u);
-            printf ("val = %lld, ", val);
-            // printf ("lch = %d, rch = %d\n", ch[0], ch[1]);
-            // printf ("cnt = %lld, siz = %lld, ", cnt, siz);
-            printf ("sum = %lld, ", sum);
-            // printf ("min = %lld, max = %lld, ", min, max);
-            printf ("\b\b}\n");
+        string to_string (int u) {
+            return std::to_string (val);
+            string res = "{";
+            // res += "u = " + std::to_string(u) + ", ";
+            res += "val = " + std::to_string (val) + ", ";
+            res += "sum = " + std::to_string (sum) + ", ";
+            res = res.substr (0, std::max (0, (int)res.length () - 2)) + "}";
+            return res;
         }
     };
 
@@ -62,13 +59,13 @@ struct Treap {
         return u;
     }
 
-    void Rotate (int &u, int d) {
+    void Rotate (int& u, int d) {
         int t = tch;
         tch = node[t].ch[d], node[t].ch[d] = u, u = t;
         PushUp (dch), PushUp (u);
     }
 
-    void InsertHelp (int &u, ll _val, ll _cnt) {
+    void InsertHelp (int& u, ll _val, ll _cnt) {
         if (!u) {
             u = NewNode (_val, _cnt);
             return;
@@ -84,7 +81,7 @@ struct Treap {
         PushUp (u);
     }
 
-    void RemoveHelp (int &u, ll _val, ll _cnt) {
+    void RemoveHelp (int& u, ll _val, ll _cnt) {
         if (!u) {
             return;
         } else if (node[u].val == _val) {
@@ -172,13 +169,25 @@ struct Treap {
         }
     }
 
-    void ShowHelp (int u) {
+    string to_string (int u, int dep, int dir) {
+        const int LEFT = 0, RIGHT = 1;
         if (!u) {
-            return;
+            return "";
         }
-        ShowHelp (lch);
-        node[u].Show (u);
-        ShowHelp (rch);
+        string res = "";
+        res += to_string (lch, dep + 1, LEFT);
+        string indent = "  ";
+        for (int i = 1; i <= dep; ++i) {
+            res += indent;
+        }
+        if (dir == LEFT) {
+            res += "/ ";
+        } else if (dir == RIGHT) {
+            res += "\\ ";
+        }
+        res += node[u].to_string (u) + "\n";
+        res += to_string (rch, dep + 1, RIGHT);
+        return res;
     }
 
 #undef lch
@@ -235,10 +244,19 @@ struct Treap {
         return GetSumRankHelp (root, rnk);
     }
 
-    void Show () {
-        printf ("Treap = [\n");
-        ShowHelp (root);
-        printf ("]\n");
+    string to_string () {
+        string res = "Treap = [";
+        if (root) {
+            res += "\n" + to_string (root, 1, -1);
+        }
+        res += "]";
+        return res;
+    }
+
+    void show () {
+#ifdef LOCAL
+        cout << to_string () << endl;
+#endif
     }
 
 } treap;
