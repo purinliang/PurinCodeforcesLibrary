@@ -17,8 +17,7 @@ struct Treap {
 
         Node(ll _val, ll _cnt) {
             rnd = rand();
-            val = _val, cnt = _cnt, siz = _cnt;
-            sum = 1LL * _val * _cnt;
+            val = _val, cnt = _cnt, siz = _cnt, sum = 1LL * _val * _cnt;
             // min = _val, max = _val;
         }
 
@@ -88,7 +87,7 @@ struct Treap {
                 int d = (!rch || node[lch].rnd > node[rch].rnd);
                 Rotate(u, d), RemoveHelp(dch, _val, _cnt);
             } else {
-                u = 0;
+                u = 0;  // u is removed
                 return;
             }
         } else {
