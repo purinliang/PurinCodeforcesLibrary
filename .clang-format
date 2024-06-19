@@ -1,0 +1,24 @@
+https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+Language: Cpp
+ 
+BasedOnStyle: Google
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+ColumnLimit: 120
+
+Standard: Cpp11
+SortIncludes: true
+
+SpaceBeforeParens: ControlStatements
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+# AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+# AllowShortLoopsOnASingleLine: true
