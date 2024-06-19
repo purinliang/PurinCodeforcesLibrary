@@ -2,18 +2,15 @@
 using namespace std;
 typedef long long ll;
 
-/* Treap */
 struct Treap {
-   public:
+   private:
+    static const int DEFAULT_CAPACITY = 3e5 + 10;
     static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
-    static const int DEFAULT_NODE_CAPACITY = 2e5 + 10;
 
     struct Node {
         int ch[2] = {}, rnd = 0;
-        ll val = 0LL, cnt = 0LL, siz = 0LL;
-        ll sum = 0LL;
-        ll min = LINF;
-        ll max = -LINF;
+        ll val = 0LL, cnt = 0LL, siz = 0LL, sum = 0LL;
+        // ll min = LINF, max = -LINF;
 
         Node() {
         }
@@ -22,8 +19,7 @@ struct Treap {
             rnd = rand();
             val = _val, cnt = _cnt, siz = _cnt;
             sum = 1LL * _val * _cnt;
-            min = _val;
-            max = _val;
+            // min = _val, max = _val;
         }
 
         string to_string(int u) {
@@ -32,12 +28,13 @@ struct Treap {
             // res += "u = " + std::to_string(u) + ", ";
             res += "val = " + std::to_string(val) + ", ";
             res += "sum = " + std::to_string(sum) + ", ";
+            // res += "min = " + std::to_string(min) + ", ";
+            // res += "max = " + std::to_string(max) + ", ";
             res = res.substr(0, std::max(0, (int)res.length() - 2)) + "}";
             return res;
         }
     };
 
-   private:
     int root;
     vector<Node> node;
 
@@ -49,8 +46,8 @@ struct Treap {
     void PushUp(int u) {
         node[u].siz = node[lch].siz + node[u].cnt + node[rch].siz;
         node[u].sum = node[lch].sum + (1LL * node[u].val * node[u].cnt) + node[rch].sum;
-        node[u].min = min({node[lch].min, node[u].val, node[rch].min});
-        node[u].max = max({node[lch].max, node[u].val, node[rch].max});
+        // node[u].min = std::min({node[lch].min, node[u].val, node[rch].min});
+        // node[u].max = std::max({node[lch].max, node[u].val, node[rch].max});
     }
 
     int NewNode(ll _val, ll _cnt) {
@@ -200,9 +197,9 @@ struct Treap {
         Init();
     }
 
-    void Init(int node_capacity = DEFAULT_NODE_CAPACITY) {
-        if (node_capacity > node.capacity()) {
-            node.reserve(node_capacity);
+    void Init(int capacity = DEFAULT_CAPACITY) {
+        if (capacity > node.capacity()) {
+            node.reserve(capacity);
         }
         root = 0;
         node.clear();
@@ -228,12 +225,12 @@ struct Treap {
         return GetValueHelp(root, rnk);
     }
 
-    ll GetPrev(ll v) {
-        return GetPrevHelp(root, v);
+    ll GetPrev(ll val) {
+        return GetPrevHelp(root, val);
     }
 
-    ll GetNext(ll v) {
-        return GetNextHelp(root, v);
+    ll GetNext(ll val) {
+        return GetNextHelp(root, val);
     }
 
     ll GetSumValue(ll val) {
