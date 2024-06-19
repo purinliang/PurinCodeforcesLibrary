@@ -2,6 +2,15 @@
 using namespace std;
 typedef long long ll;
 
+/**
+ * NonRotatingTreap
+ *
+ * The elements are managed by index (just like std::vector).
+ *
+ * This data-structure supports almostly all kinds of of the interval operations, like range_sum,
+ * range_max, range_min. range_add and range_set (just like SegmentTree), and what's more important,
+ * the RANGE_REVERSE operation.
+ */
 struct NonRotatingTreap {
    private:
     static const int DEFAULT_CAPACITY = 3e5 + 10;
@@ -159,10 +168,13 @@ struct NonRotatingTreap {
         node.push_back(Node());
     }
 
-    void Insert(int idx, int v) {
+    void Insert(int idx, int val) {
+        if (node.size() == node.capacity()) {
+            node.reserve(2 * node.capacity());
+        }
         int L = 0, M = 0, R = 0;
         SplitRank(root, idx - 1, L, R);
-        M = NewNode(v);
+        M = NewNode(val);
         root = Merge(Merge(L, M), R);
     }
 
@@ -220,4 +232,5 @@ struct NonRotatingTreap {
         cout << to_string(root) << endl;
 #endif
     }
-} non_rotating_treap;
+
+} tree;
