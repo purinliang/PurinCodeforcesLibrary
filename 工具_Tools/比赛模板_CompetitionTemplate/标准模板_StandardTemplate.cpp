@@ -64,6 +64,44 @@ void WTN(T* arr, int n) {
 
 #endif
 
+void purin_ios() {
+    cout << fixed << setprecision(12);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+#define endl "\n"
+#define fout fflush(stdout)
+}
+
+void purin_init();
+void purin_solve();
+
+void purin_online_test(bool ignore_test_case_count) {
+    purin_ios();
+    purin_init();
+    if (!ignore_test_case_count) {
+        int t = 1;
+        cin >> t;
+        for (int i = 1; i <= t; ++i) {
+            purin_solve();
+        }
+    } else {
+        auto cin_eof = [&]() -> bool {
+            char ch;
+            while (cin >> ch) {
+                if (!isspace(ch)) {
+                    cin.unget();
+                    return false;
+                }
+            }
+            return cin.eof();
+        };
+        while (!cin_eof()) {
+            purin_solve();
+        }
+    }
+}
+
 /* MY CODE BEGIN */
 
 const int INF = 0x3F3F3F3F;
@@ -71,12 +109,6 @@ const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 const int MAXN = 3e5 + 10;
 
 void purin_init() {
-    cout << fixed << setprecision(12);
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-#define endl "\n"
-#define fout fflush(stdout)
 }
 
 int n;
@@ -93,15 +125,11 @@ void purin_solve() {
 }
 
 int main() {
+    const int IGNORE_TEST_CASE_COUNT = false;
 #ifdef LOCAL
-    purin_local_multi_case();
+    purin_local_test(IGNORE_TEST_CASE_COUNT);
 #else
-    purin_init();
-    int t = 1;
-    cin >> t;
-    for (int i = 1; i <= t; ++i) {
-        purin_solve();
-    }
+    purin_online_test(IGNORE_TEST_CASE_COUNT);
 #endif
     return 0;
 }

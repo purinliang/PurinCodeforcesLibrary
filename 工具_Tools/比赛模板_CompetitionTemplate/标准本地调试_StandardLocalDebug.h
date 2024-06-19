@@ -315,43 +315,57 @@ void init_child_thread() {
     is_child_thread_finished = false;
 }
 
-void purin_local_main() {
-    init_child_thread();
-
-    auto skip_space_and_check_eof = []() {
-        char ch = getc(stdin);
-        while (isspace(ch)) {
-            ch = getc(stdin);
-        }
-        if (ch == EOF) {
-            return true;
-        }
-        ungetc(ch, stdin);
-        return false;
-    };
-
-    purin_init();
-    int t = 1;
-    cin >> t;
-
-    cout << "TestCaseCount = " << t << endl;
-    for (int i = 1; i <= t; ++i) {
-        cout << endl << "---- " << "TestCase #" << i << " ----" << endl;
-        purin_solve();
-        cout << endl << endl;
-        if (t < TEST_CASE_LIMIT && !skip_space_and_check_eof()) {
-            t = max(t, i + 1);
+bool cin_eof() {
+    char ch;
+    while (cin >> ch) {
+        if (!isspace(ch)) {
+            cin.unget();
+            return false;
         }
     }
+    return cin.eof();
+}
+
+void purin_local_main(bool ignore_test_case_count) {
+    init_child_thread();
+
+    purin_init();
+
+    int t = 1;
+    if (!ignore_test_case_count) {
+        cin >> t;
+        cerr << "TestCaseCount = " << t << endl;
+    } else {
+        t = 16;
+        cerr << "MultiCase" << endl;
+    }
+
+    for (int i = 1; i <= t; ++i) {
+        if (cin_eof()) {
+            break;
+        }
+        cerr << "Running TestCase #" << i << endl;
+        if (i > 1) {
+            cout << endl << endl << endl;
+        }
+        cout << "---- " << "TestCase #" << i << " ----" << endl;
+        purin_solve();
+        if (i == t) {
+            cerr << "TestCaseCountExceed, TestCaseCount = " << t << endl;
+            t = INT_MAX;
+        }
+    }
+
+    cerr << endl;
 
     report_child_thread_finished();
 }
 
-void purin_local_multi_case() {
+void purin_local_test(bool ignore_test_case_count) {
     freopen("标准输入_StarndardInput.in", "r", stdin);
     freopen("标准输出_StarndardOutput.out", "w", stdout);
 
-    std::thread childThread(purin_local_main);
+    std::thread childThread(purin_local_main, ignore_test_case_count);
     while (true) {
         if (is_child_thread_finished) {
             std::cerr << "OK" << std::endl;
