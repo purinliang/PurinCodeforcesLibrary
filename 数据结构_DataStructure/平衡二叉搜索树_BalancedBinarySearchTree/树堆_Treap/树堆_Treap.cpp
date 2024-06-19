@@ -161,7 +161,8 @@ struct Treap {
         } else if (node[lch].siz >= _rnk) {
             return GetSumRankHelp(lch, _rnk);
         } else {
-            return (node[u].sum - node[rch].sum) + GetSumRankHelp(rch, _rnk - (node[u].siz - node[rch].siz));
+            return (node[u].sum - node[rch].sum) +
+                   GetSumRankHelp(rch, _rnk - (node[u].siz - node[rch].siz));
         }
     }
 
@@ -255,4 +256,4 @@ struct Treap {
 #endif
     }
 
-} treap;
+} tree;
