@@ -159,24 +159,28 @@ struct NonRotatingTreap {
         node.push_back(Node());
     }
 
-    void Insert(int rnk, int v) {
+    void Insert(int idx, int v) {
         int L = 0, M = 0, R = 0;
-        SplitRank(root, rnk - 1, L, R);
+        SplitRank(root, idx - 1, L, R);
         M = NewNode(v);
         root = Merge(Merge(L, M), R);
     }
 
-    void Remove(int rnk) {
+    void Remove(int idx) {
         int L = 0, M = 0, R = 0;
-        SplitRank(root, rnk - 1, L, R);
+        SplitRank(root, idx - 1, L, R);
         SplitRank(R, 1, M, R);
         // M is removed
         root = Merge(L, R);
     }
 
-    ll Value(int rnk) {
+    int Size() {
+        return node[root].siz;
+    }
+
+    ll Value(int idx) {
         int L = 0, M = 0, R = 0;
-        SplitRank(root, rnk - 1, L, R);
+        SplitRank(root, idx - 1, L, R);
         SplitRank(R, 1, M, R);
         ll res = node[M].val;
         root = Merge(Merge(L, M), R);
