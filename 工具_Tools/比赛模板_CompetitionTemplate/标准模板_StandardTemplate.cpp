@@ -93,10 +93,10 @@ void purin_solve() {
 }
 
 int main() {
-    purin_init();
 #ifdef LOCAL
     purin_local_multi_case();
 #else
+    purin_init();
     int t = 1;
     cin >> t;
     for (int i = 1; i <= t; ++i) {
