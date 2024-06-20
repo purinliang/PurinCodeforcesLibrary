@@ -3,12 +3,14 @@ using namespace std;
 typedef long long ll;
 
 struct DisjointSetUnion {
+    int _n;
     vector<int> _prt, _siz;
 
     void init(int n) {
-        _prt.clear(), _prt.resize(n + 2);
-        _siz.clear(), _siz.resize(n + 2);
-        for (int i = 1; i <= n; i++) {
+        _n = n;
+        _prt.clear(), _prt.resize(_n + 2);
+        _siz.clear(), _siz.resize(_n + 2);
+        for (int i = 1; i <= _n; i++) {
             _prt[i] = i, _siz[i] = 1;
         }
     }
@@ -26,9 +28,7 @@ struct DisjointSetUnion {
         return rt;
     }
 
-    bool same(int x, int y) {
-        return find(x) == find(y);
-    }
+    bool same(int x, int y) { return find(x) == find(y); }
 
     bool merge(int x, int y) {
         int rx = find(x), ry = find(y);
