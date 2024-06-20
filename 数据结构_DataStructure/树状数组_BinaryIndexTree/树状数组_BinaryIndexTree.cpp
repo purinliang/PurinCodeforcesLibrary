@@ -5,32 +5,31 @@ typedef long long ll;
 /** 单点加 */
 struct BinaryIndexTreeAdd {
    private:
-    int n;
-    vector<ll> sum;
+    int _n;
+    vector<ll> _sum;
 
    public:
-    void Init(int _n) {
-        n = _n;
-        sum.clear();
-        sum.resize(n + 2);
+    void init(int n) {
+        _n = n;
+        _sum.clear(), _sum.resize(_n + 2);
     }
 
-    void Add(int idx, ll val) {
-        for (int i = idx; i <= n; i += i & (-i)) {
-            sum[i] += val;
+    void add(int idx, ll val) {
+        for (int i = idx; i <= _n; i += i & (-i)) {
+            _sum[i] += val;
         }
     }
 
-    ll Sum(int idx) {
+    ll sum(int idx) {
         ll res = 0;
         for (int i = idx; i; i -= i & (-i)) {
-            res += sum[i];
+            res += _sum[i];
         }
         return res;
     }
 
-    ll RangeSum(int l, int r) {
-        return Sum(r) - Sum(l - 1);
+    ll sum(int lidx, int ridx) {
+        return sum(ridx) - sum(lidx - 1);
     }
 
 } bit_add;
@@ -38,40 +37,37 @@ struct BinaryIndexTreeAdd {
 /** 单点改 */
 struct BinaryIndexTreeSet {
    private:
-    int n;
-    vector<ll> val, sum;
+    int _n;
+    vector<ll> _val, _sum;
 
-    void Add(int idx, ll dlt) {
-        for (int i = idx; i <= n; i += i & (-i)) {
-            sum[i] += dlt;
+    void add(int idx, ll dlt) {
+        for (int i = idx; i <= _n; i += i & (-i)) {
+            _sum[i] += dlt;
         }
     }
 
    public:
-    void Init(int _n) {
-        n = _n;
-        val.clear();
-        val.resize(n + 2);
-        sum.clear();
-        sum.resize(n + 2);
+    void init(int n) {
+        _n = n;
+        _val.clear(), _val.resize(_n + 2);
+        _sum.clear(), _sum.resize(_n + 2);
     }
 
-    void Set(int idx, ll _val) {
-        ll dlt = _val - val[idx];
-        Add(idx, dlt);
-        val[idx] = _val;
+    void set(int idx, ll val) {
+        add(idx, val - _val[idx]);
+        _val[idx] = val;
     }
 
-    ll Sum(int idx) {
+    ll sum(int idx) {
         ll res = 0;
         for (int i = idx; i; i -= i & (-i)) {
-            res += sum[i];
+            res += _sum[i];
         }
         return res;
     }
 
-    ll RangeSum(int l, int r) {
-        return Sum(r) - Sum(l - 1);
+    ll sum(int lidx, int ridx) {
+        return sum(ridx) - sum(lidx - 1);
     }
 
 } bit_set;
@@ -79,38 +75,36 @@ struct BinaryIndexTreeSet {
 /** 区间加 */
 struct BinaryIndexTreeRangeAdd {
    private:
-    int n;
-    vector<ll> d1, d2;
+    int _n;
+    vector<ll> _d1, _d2;
 
-    void Add(int idx, ll val) {
-        for (int i = idx; i <= n; i += i & (-i)) {
-            d1[i] += val, d2[i] += 1LL * idx * val;
+    void add(int idx, ll val) {
+        for (int i = idx; i <= _n; i += i & (-i)) {
+            _d1[i] += val, _d2[i] += 1LL * idx * val;
         }
     }
 
    public:
-    void Init(int _n) {
-        n = _n;
-        d1.clear();
-        d1.resize(n + 2);
-        d2.clear();
-        d2.resize(n + 2);
+    void init(int n) {
+        _n = n;
+        _d1.clear(), _d1.resize(_n + 3);
+        _d2.clear(), _d2.resize(_n + 3);
     }
 
-    void RangeAdd(int l, int r, int val) {
-        Add(l, val), Add(r + 1, -val);
+    void add(int lidx, int ridx, int val) {
+        add(lidx, val), add(ridx + 1, -val);
     }
 
-    ll Sum(int idx) {
+    ll sum(int idx) {
         ll res = 0;
         for (int i = idx; i; i -= i & (-i)) {
-            res += 1LL * (idx + 1) * d1[i] - d2[i];
+            res += 1LL * (idx + 1) * _d1[i] - _d2[i];
         }
         return res;
     }
 
-    ll RangeSum(int l, int r) {
-        return Sum(r) - Sum(l - 1);
+    ll sum(int lidx, int ridx) {
+        return sum(ridx) - sum(lidx - 1);
     }
 
 } bit_range_add;
