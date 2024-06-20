@@ -141,6 +141,18 @@ struct NonRotatingTreap {
         return res;
     }
 
+    tuple<int, int, int> Split3(int lrnk, int rrnk) {
+        int lroot = 0, mroot = 0, rroot = 0;
+        SplitRank(root, lrnk - 1, lroot, rroot);
+        SplitRank(rroot, rrnk - lrnk + 1, mroot, rroot);
+        // show(lroot, mroot, rroot);
+        return {lroot, mroot, rroot};
+    }
+
+    void Merge3(int lroot, int mroot, int rroot) {
+        root = Merge(Merge(lroot, mroot), rroot);
+    }
+
     void show(int lroot, int mroot, int rroot) {
 #ifdef LOCAL
         string res = "NonRotatingTreap = [";
@@ -172,18 +184,15 @@ struct NonRotatingTreap {
         if (node.size() == node.capacity()) {
             node.reserve(2 * node.capacity());
         }
-        int L = 0, M = 0, R = 0;
-        SplitRank(root, idx - 1, L, R);
+        auto [L, M, R] = Split3(idx, idx - 1);
         M = NewNode(val);
-        root = Merge(Merge(L, M), R);
+        Merge3(L, M, R);
     }
 
     void Remove(int idx) {
-        int L = 0, M = 0, R = 0;
-        SplitRank(root, idx - 1, L, R);
-        SplitRank(R, 1, M, R);
-        // M is removed
-        root = Merge(L, R);
+        auto [L, M, R] = Split3(idx, idx);
+        M = 0;  // M is removed
+        Merge3(L, M, R);
     }
 
     int Size() {
@@ -191,31 +200,23 @@ struct NonRotatingTreap {
     }
 
     ll Value(int idx) {
-        int L = 0, M = 0, R = 0;
-        SplitRank(root, idx - 1, L, R);
-        SplitRank(R, 1, M, R);
+        auto [L, M, R] = Split3(idx, idx);
         ll res = node[M].val;
-        root = Merge(Merge(L, M), R);
+        Merge3(L, M, R);
         return res;
     }
 
     ll Sum(int l, int r) {
-        int L = 0, M = 0, R = 0;
-        SplitRank(root, l - 1, L, R);
-        SplitRank(R, r - l + 1, M, R);
-        show(L, M, R);
+        auto [L, M, R] = Split3(l, r);
         ll res = node[M].sum;
-        root = Merge(Merge(L, M), R);
+        Merge3(L, M, R);
         return res;
     }
 
     void Reverse(int l, int r) {
-        int L = 0, M = 0, R = 0;
-        SplitRank(root, l - 1, L, R);
-        SplitRank(R, r - l + 1, M, R);
-        show(L, M, R);
+        auto [L, M, R] = Split3(l, r);
         node[M].rev_tag ^= true;
-        root = Merge(Merge(L, M), R);
+        Merge3(L, M, R);
     }
 
     string to_string(int u) {
