@@ -119,11 +119,24 @@ struct NonRotatingTreap2 {
         return l_res + m_res + r_res;
     }
 
-    string to_string(int u, int dep, string dir) {
-        string m_prefix = string(dep * 4, ' ') + dir;
-        string m_res = u ? (node[u].to_string(u) + "\n") : "";
-        string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") : "";
-        string r_res = node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
+    // string to_string(int u, int dep, string dir) {
+    //     string m_prefix = string(dep * 4, ' ') + dir;
+    //     string m_res = u ? (node[u].to_string(u) + "\n") : "";
+    //     string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") : "";
+    //     string r_res = node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
+    //     return l_res + m_prefix + m_res + r_res;
+    // }
+
+    string to_string(int u, string prefix, bool is_lch) {
+        if (!u) {
+            return "";
+        }
+        string m_prefix = prefix + (u != root ? ((is_lch ? "╭── " : "╰── ")) : "");
+        string m_res = node[u].to_string(u) + "\n";
+        string l_prefix = prefix + ((u != root) ? (is_lch ? "    " : "│   ") : "");
+        string r_prefix = prefix + ((u != root) ? (!is_lch ? "    " : "│   ") : "");
+        string l_res = to_string(node[u].lch, l_prefix, true);
+        string r_res = to_string(node[u].rch, r_prefix, false);
         return l_res + m_prefix + m_res + r_res;
     }
 
@@ -223,7 +236,7 @@ struct NonRotatingTreap2 {
         return SumBetweenRank(lrnk, rrnk);
     }
 
-    string to_string(int u) { return "NonRotatingTreap = [\n" + to_string(u, 1, "") + "]"; }
+    string to_string(int u) { return "NonRotatingTreap = [\n" + to_string(u, "", false) + "]"; }
 
     void show() {
 #ifdef LOCAL

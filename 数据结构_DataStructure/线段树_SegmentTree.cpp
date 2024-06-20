@@ -134,11 +134,11 @@ struct SegmentTree {
         return res;
     }
 
-    string to_string(int u, int l, int r, int dep, const string& dir) {
-        string m_prefix = string(dep * 4, ' ') + dir;
+    string to_string(int u, int l, int r, string prefix, bool is_lch) {
+        string m_prefix = (l <= r) ? (u != 1 ? (prefix + (is_lch ? "╭── " : "╰── ")) : "") : "";
         string m_res = (l <= r) ? (_node[u].to_string() + "\n") : "";
-        string l_res = (l < r) ? to_string(lch, l, mid, dep + 1, "/ ") : "";
-        string r_res = (l < r) ? to_string(rch, mid + 1, r, dep + 1, "\\ ") : "";
+        string l_res = (l < r) ? to_string(lch, l, mid, prefix + "│   ", true) : "";
+        string r_res = (l < r) ? to_string(rch, mid + 1, r, prefix + "│   ", false) : "";
         return l_res + m_prefix + m_res + r_res;
     }
 
@@ -170,7 +170,7 @@ struct SegmentTree {
     ll max(int L, int R) { return query(L, R)._max; }
 #endif
 
-    string to_string() { return "SegmentTree = [\n" + to_string(1, 1, _n, 1, "") + "]"; }
+    string to_string() { return "SegmentTree = [\n" + to_string(1, 1, _n, "    ", false) + "]"; }
 
     void show() {
 #ifdef LOCAL

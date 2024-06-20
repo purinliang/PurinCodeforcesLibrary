@@ -2,6 +2,9 @@
 using namespace std;
 typedef long long ll;
 
+/**
+ * TODO：线段树二分，传入一个谓词函数function
+ */
 template <typename NodeInfo, typename NodeTag>
 struct SegmentTree {
    private:
@@ -63,11 +66,27 @@ struct SegmentTree {
         return res;
     }
 
-    string to_string(int u, int l, int r, int dep, const string& dir) {
-        string m_prefix = string(dep * 4, ' ') + dir;
-        string m_res = (l <= r) ? (_info[u].to_string() + "," + _tag[u].to_string() + "\n") : "";
-        string l_res = (l < r) ? to_string(lch(u), l, mid(l, r), dep + 1, "/ ") : "";
-        string r_res = (l < r) ? to_string(rch(u), mid(l, r) + 1, r, dep + 1, "\\ ") : "";
+    // string to_string(int u, int l, int r, int dep, const string& dir) {
+    //     string m_prefix = string(dep * 4, ' ') + dir;
+    //     string m_res = (l <= r) ? (_info[u].to_string() + "," + _tag[u].to_string() + "\n") : "";
+    //     string l_res = (l < r) ? to_string(lch(u), l, mid(l, r), dep + 1, "/ ") : "";
+    //     string r_res = (l < r) ? to_string(rch(u), mid(l, r) + 1, r, dep + 1, "\\ ") : "";
+    //     return l_res + m_prefix + m_res + r_res;
+    // }
+
+    string to_string(int u, int l, int r, string prefix, bool is_lch) {
+        if (l > r) {
+            return "";
+        }
+        string m_prefix = prefix + (u != 1 ? ((is_lch ? "╭── " : "╰── ")) : "");
+        string m_res = _info[u].to_string() + "," + _tag[u].to_string() + "\n";
+        string l_res, r_res;
+        if (l < r) {
+            string l_prefix = prefix + ((u != 1) ? (is_lch ? "    " : "│   ") : "");
+            string r_prefix = prefix + ((u != 1) ? (!is_lch ? "    " : "│   ") : "");
+            l_res = to_string(lch(u), l, mid(l, r), l_prefix, true);
+            r_res = to_string(rch(u), mid(l, r) + 1, r, r_prefix, false);
+        }
         return l_res + m_prefix + m_res + r_res;
     }
 
