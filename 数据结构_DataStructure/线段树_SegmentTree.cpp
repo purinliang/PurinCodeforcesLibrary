@@ -134,26 +134,12 @@ struct SegmentTree {
         return res;
     }
 
-    string to_string(int u, int l, int r, int dep, int dir) {
-        const int LEFT = 0, RIGHT = 1;
-        string res = "";
-        if (l < r) {
-            res += to_string(lch, l, mid, dep + 1, LEFT);
-        }
-        string indent = "    ";
-        for (int i = 1; i <= dep; ++i) {
-            res += indent;
-        }
-        if (dir == LEFT) {
-            res += "/ ";
-        } else if (dir == RIGHT) {
-            res += "\\ ";
-        }
-        res += _node[u].to_string() + "\n";
-        if (l < r) {
-            res += to_string(rch, mid + 1, r, dep + 1, RIGHT);
-        }
-        return res;
+    string to_string(int u, int l, int r, int dep, const string& dir) {
+        string m_prefix = string(dep * 4, ' ') + dir;
+        string m_res = (l <= r) ? (_node[u].to_string() + "\n") : "";
+        string l_res = (l < r) ? to_string(lch, l, mid, dep + 1, "/ ") : "";
+        string r_res = (l < r) ? to_string(rch, mid + 1, r, dep + 1, "\\ ") : "";
+        return l_res + m_prefix + m_res + r_res;
     }
 
 #undef lch
@@ -184,12 +170,7 @@ struct SegmentTree {
     ll max(int L, int R) { return query(L, R)._max; }
 #endif
 
-    string to_string() {
-        string res = "SegmentTree = [";
-        res += "\n" + to_string(1, 1, _n, 1, -1);
-        res += "]";
-        return res;
-    }
+    string to_string() { return "SegmentTree = [\n" + to_string(1, 1, _n, 1, "") + "]"; }
 
     void show() {
 #ifdef LOCAL
