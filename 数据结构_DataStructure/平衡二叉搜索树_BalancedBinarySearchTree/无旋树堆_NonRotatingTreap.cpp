@@ -115,8 +115,8 @@ struct NonRotatingTreap {
     string to_string(int u, int dep, string dir) {
         string m_prefix = string(dep * 4, ' ') + dir;
         string m_res = u ? (node[u].to_string(u) + "\n") : "";
-        string l_res = u ? to_string(node[u].lch, dep + 1, "/ ") : "";
-        string r_res = u ? to_string(node[u].rch, dep + 1, "\\ ") : "";
+        string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") : "";
+        string r_res = node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
         return l_res + m_prefix + m_res + r_res;
     }
 
