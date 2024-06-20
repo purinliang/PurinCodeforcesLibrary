@@ -62,6 +62,14 @@ string to_string(const T& vec) {
     return res;
 }
 
+template <typename T>
+string to_string(T* ptr) {
+    stringstream stream;
+    stream << std::hex << (ll)ptr;
+    string res = "addr(0x" + (stream.str()) + ")";
+    return res;
+}
+
 template <typename A, typename B>
 string to_string(pair<A, B> p) {
     return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";
@@ -69,19 +77,20 @@ string to_string(pair<A, B> p) {
 
 template <typename A, typename B, typename C>
 string to_string(tuple<A, B, C> p) {
-    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) + ")";
+    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) +
+           ")";
 }
 
 template <typename A, typename B, typename C, typename D>
 string to_string(tuple<A, B, C, D> p) {
-    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) + ", " +
-           to_string(get<3>(p)) + ")";
+    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) +
+           ", " + to_string(get<3>(p)) + ")";
 }
 
 template <typename A, typename B, typename C, typename D, typename E>
 string to_string(tuple<A, B, C, D> p) {
-    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) + ", " +
-           to_string(get<3>(p)) + ", " + to_string(get<4>(p)) + ")";
+    return "(" + to_string(get<0>(p)) + ", " + to_string(get<1>(p)) + ", " + to_string(get<2>(p)) +
+           ", " + to_string(get<3>(p)) + ", " + to_string(get<4>(p)) + ")";
 }
 
 template <typename T>
@@ -108,6 +117,7 @@ template <typename T, typename... U>
 void DEBUG(const T& Head, const U&... Tail) {
     cout << to_string(Head);
     cout << (sizeof...(Tail) ? ", " : "\n");
+    fflush(stdout);
     DEBUG(Tail...);
 }
 
@@ -199,6 +209,7 @@ void _WT(const T& var) {
         return;
     }
     cout << var;
+    fflush(stdout);
 }
 
 void _WT(const char* var) {
@@ -206,6 +217,7 @@ void _WT(const char* var) {
         return;
     }
     cout << (var + 1);
+    fflush(stdout);
 }
 
 void WT() {
@@ -242,32 +254,38 @@ void WTN(T* arr, int n) {
         }
         cout << (i < n ? " " : "\n");
     }
+    fflush(stdout);
 }
 #endif
 
 #ifdef LOCAL
-#define D(...)                                                                                                \
-    do {                                                                                                      \
-        if (!count_output()) {                                                                                \
-            return;                                                                                           \
-        }                                                                                                     \
-        cout << "[D] " << COMBINE_DEBUG_OUTPUT(DEBUG_NAMES(#__VA_ARGS__), DEBUG_VALUES(__VA_ARGS__)) << endl; \
+#define D(...)                                                                             \
+    do {                                                                                   \
+        if (!count_output()) {                                                             \
+            break;                                                                         \
+        }                                                                                  \
+        cout << "[D] "                                                                     \
+             << COMBINE_DEBUG_OUTPUT(DEBUG_NAMES(#__VA_ARGS__), DEBUG_VALUES(__VA_ARGS__)) \
+             << endl;                                                                      \
+        fflush(stdout);                                                                    \
     } while (false)
 
 #define DN(arr, n)                                                    \
     do {                                                              \
         if (!count_output()) {                                        \
-            return;                                                   \
+            break;                                                    \
         }                                                             \
         cout << "[D] " << #arr << " = " << to_string(arr, n) << endl; \
+        fflush(stdout);                                               \
     } while (false)
 
 #define DF(...)                                    \
     do {                                           \
         if (!count_output()) {                     \
-            return;                                \
+            break;                                 \
         }                                          \
         cout << "[D] func = " << __func__ << endl; \
+        fflush(stdout);                            \
     } while (false)
 
 #define ASSERT(x) assert(x)
@@ -282,20 +300,20 @@ void purin_init();
 
 void purin_solve();
 
-auto start_time = std::chrono::high_resolution_clock::now();
-auto end_time = std::chrono::high_resolution_clock::now();
+auto start_time = chrono::high_resolution_clock::now();
+auto end_time = chrono::high_resolution_clock::now();
 bool is_child_thread_finished;
 
 void report_child_thread_finished() {
     is_child_thread_finished = true;
-    end_time = std::chrono::high_resolution_clock::now();
+    end_time = chrono::high_resolution_clock::now();
 }
 
 int running_time() {
     if (!is_child_thread_finished) {
-        end_time = std::chrono::high_resolution_clock::now();
+        end_time = chrono::high_resolution_clock::now();
     }
-    auto running_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    auto running_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
     return running_time;
 }
 
@@ -309,8 +327,8 @@ bool count_output() {
 }
 
 void init_child_thread() {
-    std::cerr << std::endl << "Running..." << std::endl << std::endl;
-    start_time = std::chrono::high_resolution_clock::now();
+    cerr << endl << "Running..." << endl << endl;
+    start_time = chrono::high_resolution_clock::now();
     output_count = 0;
     is_child_thread_finished = false;
 }
@@ -365,26 +383,26 @@ void purin_local_test(bool ignore_test_case_count) {
     freopen("标准输入_StarndardInput.in", "r", stdin);
     freopen("标准输出_StarndardOutput.out", "w", stdout);
 
-    std::thread childThread(purin_local_main, ignore_test_case_count);
+    thread childThread(purin_local_main, ignore_test_case_count);
     while (true) {
         if (is_child_thread_finished) {
-            std::cerr << "OK" << std::endl;
-            std::cerr << "RunningTime = " << running_time() << std::endl;
+            cerr << "OK" << endl;
+            cerr << "RunningTime = " << running_time() << endl;
             break;
         }
         if (running_time() > TIME_LIMIT) {
-            std::cerr << "TimeLimitExceed, TimeLimit = " << TIME_LIMIT << std::endl;
-            std::cerr << "RunningTime = " << running_time() << std::endl;
+            cerr << "TimeLimitExceed, TimeLimit = " << TIME_LIMIT << endl;
+            cerr << "RunningTime = " << running_time() << endl;
             break;
         }
         if (output_count >= OUTPUT_LIMIT) {
-            std::cerr << "OutputLimitExceed, OutputLimit = " << OUTPUT_LIMIT << std::endl;
-            std::cerr << "RunningTime = " << running_time() << std::endl;
+            cerr << "OutputLimitExceed, OutputLimit = " << OUTPUT_LIMIT << endl;
+            cerr << "RunningTime = " << running_time() << endl;
             break;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    std::cerr << std::endl;
+    cerr << endl;
     exit(0);
 }
