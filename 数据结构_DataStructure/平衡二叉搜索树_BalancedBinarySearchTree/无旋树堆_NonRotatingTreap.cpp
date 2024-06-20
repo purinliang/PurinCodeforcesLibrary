@@ -133,12 +133,9 @@ struct NonRotatingTreap {
     void show(int lroot, int mroot, int rroot) {
 #ifdef LOCAL
         string res = "NonRotatingTreap = [";
-        res += compressed_to_string(lroot);
-        res += "], [";
-        res += compressed_to_string(mroot);
-        res += "], [";
-        res += compressed_to_string(rroot);
-        res += "]";
+        res += compressed_to_string(lroot) + "]";
+        res += ", [" + compressed_to_string(mroot) + "]";
+        res += ", [" + compressed_to_string(rroot) + "]";
         cout << res << endl;
 #endif
     }
