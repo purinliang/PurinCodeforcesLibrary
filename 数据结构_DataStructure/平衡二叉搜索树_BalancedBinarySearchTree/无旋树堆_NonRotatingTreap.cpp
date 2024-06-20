@@ -18,12 +18,11 @@ struct NonRotatingTreap {
 
     struct Node {
         int lch = 0, rch = 0, rnd = 0;
-        bool rev_tag = false;
+        bool rev_tag = false;  // TODO add_tag, set_tag
         ll val = 0LL, siz = 0LL, sum = 0LL;
         // ll min = LINF, max = -LINF;
 
-        Node() {
-        }
+        Node() {}
 
         Node(ll _val) {
             rnd = rand();
@@ -103,42 +102,22 @@ struct NonRotatingTreap {
     }
 
     string compressed_to_string(int u) {
-        const int LEFT = 0, RIGHT = 1;
         if (!u) {
             return "";
         }
         PushDown(u);
-        string res = "";
-        if (node[u].lch) {
-            res += compressed_to_string(node[u].lch) + ", ";
-        }
-        res += node[u].to_string(u);
-        if (node[u].rch) {
-            res += ", " + compressed_to_string(node[u].rch);
-        }
-        return res;
+        string m_res = node[u].to_string(u);
+        string l_res = node[u].lch ? (compressed_to_string(node[u].lch) + ", ") : "";
+        string r_res = node[u].rch ? (", " + compressed_to_string(node[u].rch)) : "";
+        return l_res + m_res + r_res;
     }
 
-    string to_string(int u, int dep, int dir) {
-        const int LEFT = 0, RIGHT = 1;
-        if (!u) {
-            return "";
-        }
-        PushDown(u);
-        string res = "";
-        res += to_string(node[u].lch, dep + 1, LEFT);
-        string indent = "  ";
-        for (int i = 1; i <= dep; ++i) {
-            res += indent;
-        }
-        if (dir == LEFT) {
-            res += "/ ";
-        } else if (dir == RIGHT) {
-            res += "\\ ";
-        }
-        res += node[u].to_string(u) + "\n";
-        res += to_string(node[u].rch, dep + 1, RIGHT);
-        return res;
+    string to_string(int u, int dep, string dir) {
+        string m_prefix = string(dep * 4, ' ') + dir;
+        string m_res = u ? (node[u].to_string(u) + "\n") : "";
+        string l_res = u ? to_string(node[u].lch, dep + 1, "/ ") : "";
+        string r_res = u ? to_string(node[u].rch, dep + 1, "\\ ") : "";
+        return l_res + m_prefix + m_res + r_res;
     }
 
     tuple<int, int, int> Split3(int lrnk, int rrnk) {
@@ -149,9 +128,7 @@ struct NonRotatingTreap {
         return {lroot, mroot, rroot};
     }
 
-    void Merge3(int lroot, int mroot, int rroot) {
-        root = Merge(Merge(lroot, mroot), rroot);
-    }
+    void Merge3(int lroot, int mroot, int rroot) { root = Merge(Merge(lroot, mroot), rroot); }
 
     void show(int lroot, int mroot, int rroot) {
 #ifdef LOCAL
@@ -167,13 +144,11 @@ struct NonRotatingTreap {
     }
 
    public:
-    NonRotatingTreap() {
-        Init();
-    }
+    NonRotatingTreap() { Init(); }
 
     void Init(int capacity = DEFAULT_CAPACITY) {
-        if (capacity > node.capacity()) {
-            node.reserve(capacity);
+        if (capacity + 2 > node.capacity()) {
+            node.reserve(capacity + 2);
         }
         root = 0;
         node.clear();
@@ -195,9 +170,7 @@ struct NonRotatingTreap {
         Merge3(L, M, R);
     }
 
-    int Size() {
-        return node[root].siz;
-    }
+    int Size() { return node[root].siz; }
 
     ll Value(int idx) {
         auto [L, M, R] = Split3(idx, idx);
@@ -219,14 +192,7 @@ struct NonRotatingTreap {
         Merge3(L, M, R);
     }
 
-    string to_string(int u) {
-        string res = "NonRotatingTreap = [";
-        if (u) {
-            res += "\n" + to_string(u, 1, -1);
-        }
-        res += "]";
-        return res;
-    }
+    string to_string(int u) { return "NonRotatingTreap = [\n" + to_string(u, 1, "") + "]"; }
 
     void show() {
 #ifdef LOCAL
