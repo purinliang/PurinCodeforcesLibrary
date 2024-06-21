@@ -4,6 +4,8 @@
 
 ## 洛谷模板
 
+点此跳转：[洛谷模板目录](https://www.luogu.com.cn/problem/list?keyword=%E6%A8%A1%E6%9D%BF&type=AT%7CB%7CCF%7CP%7CSP%7CUVA&orderBy=difficulty&order=asc&page=1)
+
 以下按照难度增序排列。标题中的数字表示其在 Codeforces 中的难度区间。
 
 ### 普及- (900~1100) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A---orange)
