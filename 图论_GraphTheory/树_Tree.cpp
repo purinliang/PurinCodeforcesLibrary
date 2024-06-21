@@ -5,12 +5,14 @@ typedef long long ll;
 struct Tree {
     struct Node {
         vector<int> _adj;
-
         string to_string(int u) const { return std::to_string(u); }
     };
 
     int _root;
     vector<Node> _node;
+
+    Tree() {}
+    Tree(int n, int root = 1) { init(n, root); }
 
     void init(int n, int root = 1) {
         _node.clear(), _node.resize(n + 2);
@@ -22,45 +24,90 @@ struct Tree {
         _node[v]._adj.push_back(u);
     }
 
-    string to_string(int u, int p, string prefix, bool is_last_ch) const {
+    string to_string(int u, int p, string prefix, string u_prefix) const {
         if (!u) {
             return "";
         }
-        string r_prefix = prefix + (u != _root ? (is_last_ch ? "╰── " : "├── ") : "    ");
-        string r_res = _node[u].to_string(u) + "\n";
-        string ch_res;
-        int last_ch = 0;
-        for (auto& v : _node[u]._adj) {
-            if (v == p) {
-                continue;
-            }
-            last_ch = v;
+        string lch_res, rch_res, u_res = _node[u].to_string(u) + "\n";
+        vector<int> ch = _node[u]._adj;
+        auto p_it = find(ch.begin(), ch.end(), p);
+        if (p_it != ch.end()) {
+            ch.erase(p_it);
         }
-        for (auto& v : _node[u]._adj) {
-            if (v == p) {
-                continue;
-            }
-            ch_res += to_string(v, u, prefix + (is_last_ch ? "    " : "│   "), (v == last_ch));
+        if (ch.empty()) {
+            return (prefix + u_prefix) + u_res;
         }
-        return r_prefix + r_res + ch_res;
+        for (int i = 0; i < ch.size(); ++i) {
+            int v = ch[i];
+            if (i * 2 < ch.size()) {
+                string l_prefix = (u == _root) ? "" : ((u_prefix == "╭── ") ? "    " : "│   ");
+                lch_res += to_string(v, u, prefix + l_prefix, (v == ch.front()) ? "╭── " : "├── ");
+            } else {
+                string r_prefix = (u == _root) ? "" : ((u_prefix == "╰── ") ? "    " : "│   ");
+                rch_res += to_string(v, u, prefix + r_prefix, (v == ch.back()) ? "╰── " : "├── ");
+            }
+        }
+        return lch_res + (prefix + u_prefix) + u_res + rch_res;
     }
 
-    string to_string() const { return "Tree = [\n" + to_string(_root, _root, "", true) + "]"; }
+    string to_string() const { return "Tree = [\n" + to_string(_root, _root, "", "") + "]"; }
 
     void show() { cout << to_string() << endl; }
 };
 
-int n = 20;
-int p[500];
+int rand_int(int n) {
+    return (n <= 1) ? n : (rand() % (n - 1) + 1);
+}
 
-int main() {
-    Tree tree;
-    tree.init(n);
-    tree.show();
+int rand_int_low(int n) {
+    int res = n, times = 5;
+    while (times--) {
+        res = std::min(res, rand_int(n));
+    }
+    return res;
+}
+
+int rand_int_high(int n) {
+    return n + 1 - rand_int_low(n);
+}
+
+vector<int> rand_perm(int n) {
+    vector<int> perm(n + 1);
+    for (int i = 1; i <= n; ++i) {
+        perm[i] = i;
+    }
+    random_shuffle(perm.begin() + 1, perm.end());
+    return perm;
+}
+
+vector<pair<int, int>> gen_rand_tree(int n, function<int(int)> rand_int) {
+    vector<pair<int, int>> edge;
+    vector<int> perm = rand_perm(n);
+    Tree tree(n, perm[1]);
     for (int i = 2; i <= n; ++i) {
-        p[i] = rand() % (i - 1) + 1;
-        cout << i << " " << p[i] << endl;
-        tree.add_edge(i, p[i]);
+        int prt_i = rand_int(i - 1);
+        int u = perm[i], v = perm[prt_i];
+        if (std::rand() % 2 == 0) {
+            swap(u, v);
+        }
+        edge.push_back({u, v});
+    }
+    random_shuffle(edge.begin(), edge.end());
+    for (auto& [u, v] : edge) {
+        tree.add_edge(u, v);
     }
     tree.show();
+    return edge;
+}
+
+void test_gen_rand_tree() {
+    const int n = 40;
+    gen_rand_tree(n, rand_int_low);
+    gen_rand_tree(n, rand_int);
+    gen_rand_tree(n, rand_int_high);
+}
+
+int main() {
+    test_gen_rand_tree();
+    return 0;
 }
