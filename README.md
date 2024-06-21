@@ -19,7 +19,7 @@
 - [x] [双端队列](https://www.luogu.com.cn/problem/B3656)
     > 虽然 std::deque 效率很低下，但是本题构造的 1e6 个 std:deque 的场景太过极端。可以用 std::vector 和双指针直接模拟。跳过。
 - [x] [线性筛素数](https://www.luogu.com.cn/problem/P3383)
-    > TODO
+    > 已完成。
 - [x] [堆](https://www.luogu.com.cn/problem/P3378)
     > 直接用 std::priority_queue 代替。跳过。
 - [x] [排序](https://www.luogu.com.cn/problem/P1177)
