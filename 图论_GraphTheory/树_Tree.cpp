@@ -25,21 +25,21 @@ struct Tree {
     }
 
     string to_string(int u, int p, string prefix, string u_prefix) const {
-        if (!u) {
-            return "";
-        }
         string lch_res, rch_res, u_res = _node[u].to_string(u) + "\n";
-        vector<int> ch = _node[u]._adj;
-        auto p_it = find(ch.begin(), ch.end(), p);
-        if (p_it != ch.end()) {
-            ch.erase(p_it);
+        vector<int> ch;
+        for (int v : _node[u]._adj) {
+            if (v == p) {
+                continue;
+            }
+            ch.push_back(v);
         }
         if (ch.empty()) {
             return (prefix + u_prefix) + u_res;
         }
         for (int i = 0; i < ch.size(); ++i) {
             int v = ch[i];
-            if (i * 2 < ch.size()) {
+            bool is_lch = i * 2 + 1 < ch.size();
+            if (is_lch) {
                 string l_prefix = (u == _root) ? "" : ((u_prefix == "╭── ") ? "    " : "│   ");
                 lch_res += to_string(v, u, prefix + l_prefix, (v == ch.front()) ? "╭── " : "├── ");
             } else {
