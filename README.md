@@ -33,8 +33,8 @@
     > 这道题不是字符串哈希的真正用途，字符串哈希最大的用途是用于比较子串，可以用 Manacher 来验证。6月22日，已完成。
 - [x] [弗洛伊德 Floyd](https://www.luogu.com.cn/problem/B3647)
     > 6月22日，已完成。
-- [ ] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
-    > TODO
+- [x] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
+    > 6月22日，已完成。
 
 ### 普及/提高- (1200~1500) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A/%E6%8F%90%E9%AB%98---yellow)
 
