@@ -31,7 +31,7 @@
     > 直接用 std::sort 代替。跳过。
 - [x] [字符串哈希]( https://www.luogu.com.cn/problem/P3370)
     > 这道题不是字符串哈希的真正用途，字符串哈希最大的用途是用于比较子串，可以用 Manacher 来验证。6月22日，已完成。
-- [x] [弗洛伊德 Floyd](https://www.luogu.com.cn/problem/B3647)
+- [x] [弗洛伊德 Floyd - 全源最短路](https://www.luogu.com.cn/problem/B3647)
     > 6月22日，已完成。
 - [x] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
     > 6月22日，已完成。
@@ -54,9 +54,9 @@
 - [ ] 字典树
 - [x] [并查集](https://www.luogu.com.cn/problem/P3367)
     > 已有。跳过。
-- [x] [树状数组1](https://www.luogu.com.cn/problem/P3374)
+- [x] [树状数组 - 单点加值区间求和](https://www.luogu.com.cn/problem/P3374)
     > 单点加值，区间求和。已有。跳过。
-- [ ] 单源最短路（弱化版）
+- [ ] [贝尔曼福特 BellmanFord - 单源最短路](https://www.luogu.com.cn/problem/P3371)
 
 <br/>
 
@@ -65,7 +65,7 @@
 - [ ] 最近公共祖先
 - [ ] 最小生成树
 - [ ] ST表
-- [ ] BellmanFord最短路 负环
+- [x] [贝尔曼福特 BellmanFord - 负环](https://www.luogu.com.cn/problem/P3385)
 
 <br/>
 
