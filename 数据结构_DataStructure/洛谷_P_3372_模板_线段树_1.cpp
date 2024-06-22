@@ -111,148 +111,142 @@ const int MAXN = 3e5 + 10;
 void purin_init() {
 }
 
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
 struct SegmentTree {
-    // #define USING_MIN_MAX
+#define USING_MIN_MAX
    private:
     static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
     static const ll INF = 0x3F3F3F3F;
 
     struct Node {
-        int l = INF, r = -INF;
-        ll add_tag = 0LL;
-        // pair<bool, ll> set_tag = {false, 0LL};
-        ll sum = 0LL;
+        int _lidx = INF, _ridx = -INF;
+        ll _add_tag = 0LL;
+        pair<bool, ll> _set_tag = {false, 0LL};
+        ll _sum = 0LL;
 #ifdef USING_MIN_MAX
-        ll min = LINF;
-        ll max = -LINF;
+        ll _min = LINF;
+        ll _max = -LINF;
 #endif
 
         Node() {
         }
 
-        Node(int _l, int _r, ll _val) {
-            l = _l, r = _r;
-            add_tag = 0LL;
-            // set_tag = {false, 0LL};
-            sum = _val;
-#ifdef USING_MIN_MAX
-            min = _val;
-            max = _val;
-#endif
+        Node(int _l, int _r) {
+            _lidx = _l, _ridx = _r;
         }
 
         string to_string() {
-            return std::to_string(sum);
+            return std::to_string(_sum);
             string res = "";
-            res += "[" + std::to_string(l) + ", " + std::to_string(r) + "] ";
-            res += "sum = " + std::to_string(sum) + ", ";
+            res += "[" + std::to_string(_lidx) + ", " + std::to_string(_ridx) + "] ";
+            res += "sum = " + std::to_string(_sum) + ", ";
 #ifdef USING_MIN_MAX
-            res += "min = " + std::to_string(min) + ", ";
-            res += "max = " + std::to_string(max) + ", ";
+            res += "min = " + std::to_string(_min) + ", ";
+            res += "max = " + std::to_string(_max) + ", ";
 #endif
             res = res.substr(0, std::max(0, (int)res.length() - 2));
             return res;
         }
 
-        void Add(ll val) {
-            add_tag += val;
-            sum += 1LL * (r - l + 1) * val;
+        void add(ll val) {
+            _add_tag += val;
+            _sum += 1LL * (_ridx - _lidx + 1) * val;
 #ifdef USING_MIN_MAX
-            min += val;
-            max += val;
+            _min += val;
+            _max += val;
 #endif
         }
 
-        //         void Set(ll val) {
-        //             set_tag = {true, val};
-        //             sum = 1LL * (r - l + 1) * val;
-        // #ifdef USING_MIN_MAX
-        //             min = val;
-        //             max = val;
-        // #endif
-        //         }
+        void Set(ll val) {
+            _set_tag = {true, val};
+            _sum = 1LL * (_ridx - _lidx + 1) * val;
+#ifdef USING_MIN_MAX
+            _min = val;
+            _max = val;
+#endif
+        }
 
         void Merge(Node& lch_node, Node& rch_node) {
-            l = std::min(lch_node.l, rch_node.l);
-            r = std::max(lch_node.r, rch_node.r);
-            sum = lch_node.sum + rch_node.sum;
+            _lidx = std::min(lch_node._lidx, rch_node._lidx);
+            _ridx = std::max(lch_node._ridx, rch_node._ridx);
+            _sum = lch_node._sum + rch_node._sum;
 #ifdef USING_MIN_MAX
-            min = std::min(lch_node.min, rch_node.min);
-            max = std::max(lch_node.max, rch_node.max);
+            _min = std::min(lch_node._min, rch_node._min);
+            _max = std::max(lch_node._max, rch_node._max);
 #endif
         }
     };
 
-    int n;
-    int* init_inta;
-    ll* init_lla;
-    vector<Node> node;
+    int _n;
+    vector<Node> _node;
 
 #define lch (u << 1)
 #define rch (u << 1 | 1)
 #define mid ((l + r) >> 1)
 
-    void PushUp(int u) {
-        node[u].Merge(node[lch], node[rch]);
+    void pull_up(int u) {
+        _node[u].Merge(_node[lch], _node[rch]);
     }
 
-    void PushDown(int u) {
-        if (node[u].add_tag != 0LL) {
-            node[lch].Add(node[u].add_tag);
-            node[rch].Add(node[u].add_tag);
-            node[u].add_tag = 0LL;
+    void push_down(int u) {
+        if (_node[u]._add_tag != 0LL) {
+            _node[lch].add(_node[u]._add_tag);
+            _node[rch].add(_node[u]._add_tag);
+            _node[u]._add_tag = 0LL;
         }
     }
 
-    void Build(int u, int l, int r) {
+    void build(int u, int l, int r) {
         if (l == r) {
-            ll val = (init_inta ? init_inta[l] : (init_lla ? init_lla[l] : 0LL));
-            node[u] = Node(l, r, val);
+            _node[u] = Node(l, r);
             return;
         }
-        Build(lch, l, mid);
-        Build(rch, mid + 1, r);
-        PushUp(u);
+        build(lch, l, mid);
+        build(rch, mid + 1, r);
+        pull_up(u);
     }
 
-    void Add(int u, int l, int r, int L, int R, ll val) {
+    void add(int u, int l, int r, int L, int R, ll val) {
         if (L > R || L > r || R < l) {
             return;
         }
         if (L <= l && r <= R) {
-            node[u].Add(val);
+            _node[u].add(val);
             return;
         }
-        PushDown(u);
-        Add(lch, l, mid, L, R, val);
-        Add(rch, mid + 1, r, L, R, val);
-        PushUp(u);
+        push_down(u);
+        add(lch, l, mid, L, R, val);
+        add(rch, mid + 1, r, L, R, val);
+        pull_up(u);
     }
 
-    // void Set(int u, int l, int r, int L, int R, ll val) {
+    // void set(int u, int l, int r, int L, int R, ll val) {
     //     if (L > R || L > r || R < l) {
     //         return;
     //     }
     //     if (L <= l && r <= R) {
-    //         node[u].Set(val);
+    //         node[u].set(val);
     //         return;
     //     }
-    //     PushDown(u);
-    //     Set(lch, l, mid, L, R, val);
-    //     Set(rch, mid + 1, r, L, R, val);
-    //     PushUp(u);
+    //     push_down(u);
+    //     set(lch, l, mid, L, R, val);
+    //     set(rch, mid + 1, r, L, R, val);
+    //     pull_up(u);
     // }
 
-    Node Query(int u, int l, int r, int L, int R) {
+    Node query(int u, int l, int r, int L, int R) {
         if (L > R || L > r || R < l) {
             return Node();
         }
         if (L <= l && r <= R) {
-            return node[u];
+            return _node[u];
         }
-        PushDown(u);
-        Node l_res = Query(lch, l, mid, L, R);
-        Node r_res = Query(rch, mid + 1, r, L, R);
+        push_down(u);
+        Node l_res = query(lch, l, mid, L, R);
+        Node r_res = query(rch, mid + 1, r, L, R);
         Node res;
         res.Merge(l_res, r_res);
         return res;
@@ -273,18 +267,11 @@ struct SegmentTree {
         } else if (dir == RIGHT) {
             res += "\\ ";
         }
-        res += node[u].to_string() + "\n";
+        res += _node[u].to_string() + "\n";
         if (l < r) {
             res += to_string(rch, mid + 1, r, dep + 1, RIGHT);
         }
         return res;
-    }
-
-    void Init(int _n) {
-        n = _n;
-        node.clear();
-        node.resize(4 * n);
-        Build(1, 1, n);
     }
 
 #undef lch
@@ -292,49 +279,42 @@ struct SegmentTree {
 #undef mid
 
    public:
-    void Build(int n) {
-        init_inta = nullptr, init_lla = nullptr;
-        Init(n);
-    }
-    void Build(int n, int* _init_inta) {
-        init_inta = _init_inta, init_lla = nullptr;
-        Init(n);
+    void build(int n) {
+        _n = n;
+        _node.clear();
+        _node.resize(4 * _n);
+        build(1, 1, _n);
     }
 
-    void Build(int _n, ll* _init_lla) {
-        init_inta = nullptr, init_lla = _init_lla;
-        Init(n);
+    void add(int L, int R, ll val) {
+        add(1, 1, _n, L, R, val);
     }
 
-    void Add(int L, int R, ll val) {
-        Add(1, 1, n, L, R, val);
-    }
-
-    // void Set(int L, int R, ll val) {
-    //     Set(1, 1, n, L, R, val);
+    // void set(int L, int R, ll val) {
+    //     set(1, 1, n, L, R, val);
     // }
 
-    Node Query(int L, int R) {
-        return Query(1, 1, n, L, R);
+    Node query(int L, int R) {
+        return query(1, 1, _n, L, R);
     }
 
-    ll Sum(int L, int R) {
-        return Query(L, R).sum;
+    ll sum(int L, int R) {
+        return query(L, R)._sum;
     }
 
 #ifdef USING_MIN_MAX
-    ll Min(int L, int R) {
-        return Query(L, R).min;
+    ll min(int L, int R) {
+        return query(L, R)._min;
     }
 
-    ll Max(int L, int R) {
-        return Query(L, R).max;
+    ll max(int L, int R) {
+        return query(L, R)._max;
     }
 #endif
 
     string to_string() {
         string res = "SegmentTree = [";
-        res += "\n" + to_string(1, 1, n, 1, -1);
+        res += "\n" + to_string(1, 1, _n, 1, -1);
         res += "]";
         return res;
     }
@@ -355,8 +335,10 @@ int a[MAXN];
 void purin_solve() {
     RD(n, m);
     RDN(a, n);
-    DN(a, n);
-    st.Build(n, a);
+    st.build(n);
+    for (int i = 1; i <= n; ++i) {
+        st.add(i, i, a[i]);
+    }
     st.show();
     while (m--) {
         int opt;
@@ -364,12 +346,12 @@ void purin_solve() {
         if (opt == 1) {
             int l, r, k;
             RD(l, r, k);
-            st.Add(l, r, k);
+            st.add(l, r, k);
             st.show();
         } else if (opt == 2) {
             int l, r;
             RD(l, r);
-            ll res = st.Sum(l, r);
+            ll res = st.sum(l, r);
             WT(res);
         }
     }
