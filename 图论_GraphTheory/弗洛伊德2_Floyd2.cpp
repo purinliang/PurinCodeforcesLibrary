@@ -24,12 +24,12 @@ struct Floyd2 {
     void init(int n) {
         _n = n;
         _edge.clear(), _edge.resize(_n + 2);
-        _rev_edge.clear(), _rev_edge.resize(_n + 2);
+        // _rev_edge.clear(), _rev_edge.resize(_n + 2);
     }
 
     void add_edge(int u, int v, ll w = 0LL) {
         _edge[u].push_back({v, w});
-        _rev_edge[v].push_back({u, w});
+        // _rev_edge[v].push_back({u, w});
     }
 
     void floyd() {

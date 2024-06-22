@@ -43,7 +43,7 @@
 - [ ] 单调队列
 - [x] [乘法逆元](https://www.luogu.com.cn/problem/P3811)
     > 费马小定理。跳过。
-- [x] [裴蜀定理](https://www.luogu.com.cn/problem/P4549)
+- [x] [贝祖 Bezout 定理](https://www.luogu.com.cn/problem/P4549)
     > n 个正负整数的线性组合能构成的最小正整数，全部求 gcd ，学会欧几里得算法就可以了。跳过。
 - [ ] 单调栈
 - [ ] 三分
@@ -51,7 +51,8 @@
 <br/>
 
 - [ ] 传递闭包
-- [ ] 字典树
+- [ ] [字典树 - Trie](https://www.luogu.com.cn/problem/P8306)
+    > 另外还需要一个衍生版本的 01 Trie 支持维护区间异或操作，二分操作，求最值操作。
 - [x] [并查集](https://www.luogu.com.cn/problem/P3367)
     > 已有。跳过。
 - [x] [树状数组 - 单点加值区间求和](https://www.luogu.com.cn/problem/P3374)
@@ -61,17 +62,21 @@
 
 <br/>
 
-- [x] [树状数组2](https://www.luogu.com.cn/problem/P3368)
-    > 区间价值，单点求和。简单维护一下差分数组，已有。跳过。
+- [x] [树状数组 - 区间加值单点求和](https://www.luogu.com.cn/problem/P3368)
+    > 区间加值，单点求和。简单维护一下差分数组，已有。跳过。
 - [ ] 最近公共祖先
+    > 倍增算法， Tarjan 算法，树链剖分算法
 - [ ] 最小生成树
+    > Kruskal 算法， Prim 算法
 - [ ] ST表
+    > 线段树，笛卡尔树
 - [x] [贝尔曼福特 BellmanFord - 负环](https://www.luogu.com.cn/problem/P3385)
-    > 6月22日，已完成。
+    > 6月22日，已完成。最好再弄一个经典版本的 BellmanFord ，我记得还有一个题叫做“汇率兑换”的。
 
 <br/>
 
-- [ ] 单源最短路（标准版）
+- [x] [迪克斯特拉 Dijkstra - 单源最短路](https://www.luogu.com.cn/problem/P4779)
+    > 6月22日，已完成。
 
 ### 普及+/提高 (1600~1900) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A+/%E6%8F%90%E9%AB%98-green)
 

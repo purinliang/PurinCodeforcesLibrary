@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long ll;
 
-struct BellmanFord {
+struct Dijkstra {
     static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 
    private:
@@ -32,24 +32,22 @@ struct BellmanFord {
         // _rev_edge[v].push_back({u, w});
     }
 
-    bool bellman_ford(int s) {
+    void dijkstra(int s) {
         _dis.clear(), _dis.resize(_n + 2);
         for (int i = 1; i <= _n; ++i) {
             _dis[i] = LINF;
         }
         vector<bool> vis(_n + 2);
-        vector<int> cnt(_n + 2);
-        queue<int> que;
+        priority_queue<pair<ll, int>> pq;
         _dis[s] = 0;
-        vis[s] = true;
-        que.push(s);
-        while (!que.empty()) {
-            int u = que.front();
-            que.pop();
-            vis[u] = false;
-            if (++cnt[u] >= _n) {
-                return true;
+        pq.push({-_dis[s], s});
+        while (!pq.empty()) {
+            int u = pq.top().second;
+            pq.pop();
+            if (vis[u]) {
+                continue;
             }
+            vis[u] = true;
             for (const Edge& e : _edge[u]) {
                 int v = e._v;
                 ll w = e._w;
@@ -57,13 +55,9 @@ struct BellmanFord {
                     continue;
                 }
                 _dis[v] = _dis[u] + w;
-                if (vis[v] == false) {
-                    vis[v] = true;
-                    que.push(v);
-                }
+                pq.push({-_dis[v], v});
             }
         }
-        return false;
     }
 
     void show_dis() {
@@ -73,4 +67,4 @@ struct BellmanFord {
     }
 };
 
-BellmanFord graph;
+Dijkstra graph;
