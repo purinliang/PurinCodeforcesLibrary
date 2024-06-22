@@ -30,7 +30,7 @@
 - [x] [双端队列](https://www.luogu.com.cn/problem/B3656)
     > 虽然 std::deque 效率很低下，但是本题构造的 1e6 个 std:deque 的场景太过极端。可以用 std::vector 和双指针直接模拟。跳过。
 - [x] [线性筛质数](https://www.luogu.com.cn/problem/P3383)
-    > 6月21日，已完成。
+    > 6月21日，已完成。可以补充一个 bitset 版本的埃氏筛，速度更快。
 
 <br/>
 
@@ -59,7 +59,8 @@
 
 <br/>
 
-- [ ] 传递闭包
+- [x] 传递闭包(https://www.luogu.com.cn/problem/B3611)
+    > 可以用 Floyd 去做，记得去掉 Floyd 默认的自环。也可以去用 bitset 去做。
 - [ ] [字典树 - Trie](https://www.luogu.com.cn/problem/P8306)
     > 另外还需要一个衍生版本的 01 Trie 支持维护区间异或操作，二分操作，求最值操作。
 - [x] [并查集](https://www.luogu.com.cn/problem/P3367)
@@ -89,6 +90,7 @@
 
 补充部分：
 
+- [ ] 模整数
 - [x] [组合数学](https://www.luogu.com.cn/problem/B3717)
     > 6月22日，已完成。
 
