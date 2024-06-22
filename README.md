@@ -20,7 +20,7 @@
     > 虽然 std::queue 默认实现是效率低下的 std::deque, 但足以应对大多数场景，也可以用 std::vector 和双指针直接模拟。跳过。
 - [x] [双端队列](https://www.luogu.com.cn/problem/B3656)
     > 虽然 std::deque 效率很低下，但是本题构造的 1e6 个 std:deque 的场景太过极端。可以用 std::vector 和双指针直接模拟。跳过。
-- [x] [线性筛素数](https://www.luogu.com.cn/problem/P3383)
+- [x] [线性筛质数](https://www.luogu.com.cn/problem/P3383)
     > 6月21日，已完成。
 
 <br/>
@@ -29,9 +29,9 @@
     > 直接用 std::priority_queue 代替。跳过。
 - [x] [排序](https://www.luogu.com.cn/problem/P1177)
     > 直接用 std::sort 代替。跳过。
-- [ ] [字符串哈希]( https://www.luogu.com.cn/problem/P3370)
-    > TODO
-- [ ] [全源最短路 - 弗洛伊德Floyd算法](https://www.luogu.com.cn/problem/B3647)
+- [x] [字符串哈希]( https://www.luogu.com.cn/problem/P3370)
+    > 这道题不是字符串哈希的真正用途，字符串哈希最大的用途是用于比较子串，可以用 Manacher 来验证。6月22日，已完成。
+- [ ] [弗洛伊德Floyd算法](https://www.luogu.com.cn/problem/B3647)
     > TODO
 - [ ] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
     > TODO
@@ -124,7 +124,7 @@
 
 <br/>
 
-- [ ] Manacher回文串
+- [ ] Manacher回文串(https://www.luogu.com.cn/problem/P3805)
 - [ ] 扫描线
 - [ ] 中国剩余定理
 - [ ] 二维凸包
