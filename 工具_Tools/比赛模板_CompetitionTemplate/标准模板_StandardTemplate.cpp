@@ -16,11 +16,12 @@ void _RD(T& var) {
 }
 
 void _RD(char* var) {
-    cin >> (var + 1);
+    string str;
+    cin >> str;
+    strcpy(var + 1, str.c_str());
 }
 
-void RD() {
-}
+void RD() {}
 
 template <typename T, typename... U>
 void RD(T& Head, U&... Tail) {
@@ -44,8 +45,7 @@ void _WT(const char* var) {
     cout << (var + 1);
 }
 
-void WT() {
-}
+void WT() {}
 
 template <typename T, typename... U>
 void WT(const T& Head, const U&... Tail) {
@@ -106,13 +106,11 @@ void purin_online_test(bool ignore_test_case_count) {
 
 const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
+
 const int MAXN = 3e5 + 10;
+int n, a[MAXN];
 
-void purin_init() {
-}
-
-int n;
-int a[MAXN];
+void purin_init() {}
 
 void purin_solve() {
     RD(n);

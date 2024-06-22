@@ -110,8 +110,7 @@ string to_string(T* arr, int n) {
 
 /* DEBUG */
 
-void DEBUG() {
-}
+void DEBUG() {}
 
 template <typename T, typename... U>
 void DEBUG(const T& Head, const U&... Tail) {
@@ -182,11 +181,12 @@ void _RD(T& var) {
 }
 
 void _RD(char* var) {
-    cin >> (var + 1);
+    string str;
+    cin >> str;
+    strcpy(var + 1, str.c_str());
 }
 
-void RD() {
-}
+void RD() {}
 
 template <typename T, typename... U>
 void RD(T& Head, U&... Tail) {
@@ -220,8 +220,7 @@ void _WT(const char* var) {
     fflush(stdout);
 }
 
-void WT() {
-}
+void WT() {}
 
 template <typename T, typename... U>
 void WT(const T& Head, const U&... Tail) {
