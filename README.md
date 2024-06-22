@@ -44,7 +44,7 @@
 - [x] [乘法逆元](https://www.luogu.com.cn/problem/P3811)
     > 费马小定理。跳过。
 - [x] [裴蜀定理](https://www.luogu.com.cn/problem/P4549)
-    > n 个正负整数的线性组合能构成的最小正整数，全部求 gcd 。
+    > n 个正负整数的线性组合能构成的最小正整数，全部求 gcd ，学会欧几里得算法就可以了。跳过。
 - [ ] 单调栈
 - [ ] 三分
 
@@ -56,7 +56,8 @@
     > 已有。跳过。
 - [x] [树状数组 - 单点加值区间求和](https://www.luogu.com.cn/problem/P3374)
     > 单点加值，区间求和。已有。跳过。
-- [ ] [贝尔曼福特 BellmanFord - 单源最短路](https://www.luogu.com.cn/problem/P3371)
+- [x] [贝尔曼福特 BellmanFord - 单源最短路](https://www.luogu.com.cn/problem/P3371)
+    > 6月22日，已完成。
 
 <br/>
 
@@ -66,6 +67,7 @@
 - [ ] 最小生成树
 - [ ] ST表
 - [x] [贝尔曼福特 BellmanFord - 负环](https://www.luogu.com.cn/problem/P3385)
+    > 6月22日，已完成。
 
 <br/>
 
