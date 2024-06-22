@@ -31,7 +31,7 @@
     > 直接用 std::sort 代替。跳过。
 - [x] [字符串哈希]( https://www.luogu.com.cn/problem/P3370)
     > 这道题不是字符串哈希的真正用途，字符串哈希最大的用途是用于比较子串，可以用 Manacher 来验证。6月22日，已完成。
-- [ ] [弗洛伊德Floyd算法](https://www.luogu.com.cn/problem/B3647)
+- [ ] [弗洛伊德 Floyd 算法](https://www.luogu.com.cn/problem/B3647)
     > TODO
 - [ ] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
     > TODO
