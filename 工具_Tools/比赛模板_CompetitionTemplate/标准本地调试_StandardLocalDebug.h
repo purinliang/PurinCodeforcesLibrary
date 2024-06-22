@@ -238,6 +238,17 @@ void WT(const T& Head, const U&... Tail) {
     WT(Tail...);
 }
 
+void WTY(bool var, bool capital = false) {
+    if (!count_output()) {
+        return;
+    }
+    if (capital) {
+        cout << (var ? "YES" : "NO") << "\n";
+    } else {
+        cout << (var ? "Yes" : "No") << "\n";
+    }
+}
+
 template <typename T>
 void WTN(T* arr, int n) {
     if (!count_output()) {
