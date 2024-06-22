@@ -123,11 +123,11 @@ void purin_solve() {
 }
 
 int main() {
-    const int IGNORE_TEST_CASE_COUNT = false;
+    const bool ignore_test_case_count = false;
 #ifdef LOCAL
-    purin_local_test(IGNORE_TEST_CASE_COUNT);
+    purin_local_test(ignore_test_case_count);
 #else
-    purin_online_test(IGNORE_TEST_CASE_COUNT);
+    purin_online_test(ignore_test_case_count);
 #endif
     return 0;
 }
