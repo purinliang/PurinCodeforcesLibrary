@@ -24,21 +24,41 @@ struct BaseSieve {
     }
 
     template <typename function>
-    void calc_d(ll x, bool skip_1, function f) {
+    void calc_prime_divisor(ll x, bool skip_1, function f) {
+        if (!skip_1) {
+            f(1);
+        }
+        // Could be faster if preprocess minimal prime divisor of x
         for (const auto& d : p) {
             if (d * d > x) {
                 break;
             }
+            if (d == 1 || x % d != 0) {
+                continue;
+            }
+            f(d);
+            while (x % d == 0) {
+                x /= d;
+            }
+        }
+        if (x != 1) {
+            f(x);
+        }
+    }
+
+    template <typename function>
+    void calc_any_divisor(ll x, bool skip_1, function f) {
+        if (!skip_1) {
+            f(1);
+        }
+        // Could be faster if preprocess all divisor of x
+        for (ll d = 2; d * d <= x; ++d) {
             if (x % d != 0) {
                 continue;
             }
-            ll d1 = (d == 1) ? (skip_1 ? 0LL : d) : d;
-            if (d1 > 0LL) {
-                f(d1);
-            }
-            ll d2 = (d * d == x) ? 0LL : x / d;
-            if (d2 > 0LL) {
-                f(d2);
+            f(d);
+            if (d * d != x) {
+                f(x / d);
             }
         }
     }
