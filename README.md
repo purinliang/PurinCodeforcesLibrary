@@ -17,6 +17,8 @@
 
 以下按照难度增序排列。标题中的数字表示其在 Codeforces 中的难度区间。
 
+TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源最短路BellmanFord和传递闭包bitset。
+
 ### 普及- (900~1100) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A---orange)
 
 预计用时1天，6月21日完成。
@@ -45,6 +47,12 @@
 - [x] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
     > 6月22日，已完成。
 
+补充部分：
+
+- [ ] 模整数
+- [x] [二维前缀和]
+    > 6月23日，已完成。
+
 ### 普及/提高- (1200~1500) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A/%E6%8F%90%E9%AB%98---yellow)
 
 预计用时2天，6月23日完成。
@@ -54,7 +62,8 @@
     > 费马小定理。跳过。
 - [x] [贝祖 Bezout 定理](https://www.luogu.com.cn/problem/P4549)
     > n 个正负整数的线性组合能构成的最小正整数，全部求 gcd ，学会欧几里得算法就可以了。跳过。
-- [ ] 单调栈
+- [x] 单调栈
+    > 6月23日，已完成。可以试试看笛卡尔树。
 - [ ] 三分
 
 <br/>
@@ -93,6 +102,8 @@
 - [ ] 模整数
 - [x] [组合数学](https://www.luogu.com.cn/problem/B3717)
     > 6月22日，已完成。
+- [x] [01广度优先搜索 01BFS - 单源最短路](https://ac.nowcoder.com/acm/contest/85187/F)
+    > 6月23日，已完成。
 
 ### 普及+/提高 (1600~1900) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A+/%E6%8F%90%E9%AB%98-green)
 
