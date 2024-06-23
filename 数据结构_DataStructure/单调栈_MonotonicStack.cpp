@@ -53,8 +53,11 @@ struct MonotonicStack {
 };
 
 /**
- * Find the leftmost a[j] that j > i and a[j] greater than a[i], when not exist answer is n + 1
- * auto res = MonotonicStack::find_leftmost<int>(n, a, greater<int>(), n + 1);
- * Find the rightmost a[j] that j < i and a[j] greater than a[i], when not exist answer is 0
- * auto res = MonotonicStack::find_rightmost<int>(n, a, greater<int>(), 0);
+ * Find the leftmost a[j] that j > i and a[j] greater than a[i],
+ * when not exist answer is n + 1:
+ *      auto res = MonotonicStack::find_leftmost<int>(n, a, greater<int>(), n + 1);
+ *
+ * Find the rightmost a[j] that j < i and a[j] greater than a[i],
+ * when not exist answer is 0:
+ *      auto res = MonotonicStack::find_rightmost<int>(n, a, greater<int>(), 0);
  */
