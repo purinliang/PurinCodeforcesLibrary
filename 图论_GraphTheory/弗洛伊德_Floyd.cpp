@@ -32,6 +32,8 @@ struct Floyd {
         }
     }
 
+    ll dis(int u, int v) { return (u <= 0 || u > _n || v <= 0 || v > _n) ? LINF : _dis[u][v]; }
+
     void show_dis() {
         for (int i = 1; i <= _n; ++i) {
             for (int j = 1; j <= _n; ++j) {

@@ -66,6 +66,8 @@ struct BellmanFord {
         return false;
     }
 
+    ll dis(int u) { return (u <= 0 || u > _n) ? LINF : _dis[u]; }
+
     void show_dis() {
         for (int i = 1; i <= _n; ++i) {
             cout << (_dis[i] == LINF ? "INF" : to_string(_dis[i])) << (" \n"[i == _n]);
