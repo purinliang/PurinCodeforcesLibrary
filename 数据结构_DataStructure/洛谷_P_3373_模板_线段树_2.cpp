@@ -224,6 +224,12 @@ struct SegmentTree {
     }
 };
 
+void try_mod(ll& x) {
+    if (x >= MOD) {
+        x %= MOD;
+    }
+}
+
 /**
  * If apply M = _mul_tag first, and then apply A = _add_tag:
  *
