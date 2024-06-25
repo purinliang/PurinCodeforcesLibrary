@@ -141,8 +141,8 @@ TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源�
 
 <br>
 
-- [ ] [扩展欧几里得算法](https://www.luogu.com.cn/problem/P5656)
-    > 6月24日。
+- [x] [扩展欧几里得算法](https://www.luogu.com.cn/problem/P5656)
+    > 6月25日，完成，注意 dx 和 dy 都是大于0的，并且他们会同步变化。
 - [ ] [矩阵快速幂](https://www.luogu.com.cn/problem/P3390)
 - [ ] 点双连通分量
 - [ ] 卢卡斯定理
