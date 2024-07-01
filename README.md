@@ -49,7 +49,6 @@ TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源�
 
 补充部分：
 
-- [ ] 模整数
 - [x] [二维前缀和]
     > 6月23日，已完成。
 
@@ -63,9 +62,9 @@ TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源�
     > 费马小定理。跳过。
 - [x] [贝祖 Bezout 定理](https://www.luogu.com.cn/problem/P4549)
     > n 个正负整数的线性组合能构成的最小正整数，全部求 gcd ，学会欧几里得算法就可以了。跳过。
-- [x] 单调栈
+- [x] [单调栈](https://www.luogu.com.cn/problem/P5788)
     > 6月23日，已完成。可以试试看笛卡尔树。
-- [x] 三分搜索
+- [x] [三分搜索](https://www.luogu.com.cn/problem/P1883)
     > 6月23日，已完成。
 
 <br>
@@ -141,7 +140,7 @@ TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源�
 
 <br>
 
-- [x] [扩展欧几里得算法](https://www.luogu.com.cn/problem/P5656)
+- [x] [扩展欧几里得 ExtendedEuclid 算法 - 二元一次不定方程](https://www.luogu.com.cn/problem/P5656)
     > 6月25日，完成，注意 dx 和 dy 都是大于0的，并且他们会同步变化。
 - [ ] [矩阵快速幂](https://www.luogu.com.cn/problem/P3390)
 - [ ] 点双连通分量
