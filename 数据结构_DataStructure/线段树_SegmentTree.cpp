@@ -4,6 +4,8 @@ typedef long long ll;
 
 /**
  * TODO：线段树二分，传入一个谓词函数function
+ * TODO 带初始化a数组
+ * TODO 连锁下推怎么实现
  */
 template <typename NodeInfo, typename NodeTag>
 struct SegmentTree {
@@ -102,7 +104,7 @@ struct SegmentTree {
 
     NodeInfo query(int L, int R) { return query(1, 1, _n, L, R); }
 
-    string to_string() { return "SegmentTree = [\n" + to_string(1, 1, _n, 1, "") + "]"; }
+    string to_string() { return "SegmentTree = [\n" + to_string(1, 1, _n, "", false) + "]"; }
 
     void show() {
 #ifdef LOCAL
