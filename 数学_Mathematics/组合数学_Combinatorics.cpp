@@ -7,7 +7,7 @@ namespace Combinatorics {
 // TODO: 复制模整数类进来，用这个类通过了的提交可以标上日期，贴在下面（不是贴题目）
 
 // MOD must be a very big prime (e.g. at least 1e6) and bigger than max(n)
-// static const int MOD = 998244353;
+static const int MOD = 998244353;
 
 ll qpow(ll x, ll n) {
     ll res = 1;
@@ -41,7 +41,7 @@ void _init(int n) {
     }
 }
 
-ll A_slow(ll n, ll m) {
+ll P_slow(ll n, ll m) {
     const int MAX_M = 1e6 + 10;
     assert(m <= MAX_M);
     ll res = 1LL;
@@ -56,10 +56,10 @@ ll C_slow(ll n, ll m) {
     const int MAX_M = 1e6 + 10;
     assert(m <= MAX_M);
     _init(m);
-    return 1LL * A_slow(n, m) * inv_fac[m] % MOD;
+    return 1LL * P_slow(n, m) * inv_fac[m] % MOD;
 }
 
-ll A(ll n, ll m) {
+ll P(ll n, ll m) {
     if (n < 0LL || m < 0LL || n < m) {
         return 0LL;
     }
@@ -72,7 +72,7 @@ ll C(ll n, ll m) {
         return 0LL;
     }
     _init(n);
-    return 1LL * A(n, m) * inv_fac[m] % MOD;
+    return 1LL * P(n, m) * inv_fac[m] % MOD;
 }
 
 // Distribute identitical balls into distinct boxes, and boxes can be empty.
