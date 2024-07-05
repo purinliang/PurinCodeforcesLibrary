@@ -64,7 +64,7 @@ struct BaseSieve {
     }
 };
 
-struct EulerSieveMinPrime : public BaseSieve {
+struct SieveOfEulerMinPrime : public BaseSieve {
     vector<int> min_p, min_p_k;
 
     string to_string(int lim) {
@@ -112,14 +112,15 @@ struct EulerSieveMinPrime : public BaseSieve {
     }
 };
 
-struct EulerSieveNotPrime : public BaseSieve {
+// TODO 补充其他的数论函数
+struct SieveOfEulerNotPrime : public BaseSieve {
     vector<bool> not_p;
 
     void init(int n) {
         p.clear();
         not_p.clear(), not_p.resize(n + 2);
         for (int i = 1; i <= n; ++i) {
-            if (not_p[i] == 0) {
+            if (not_p[i] == false) {
                 p.push_back(i);
             }
             for (int j = 1, t; j < p.size() && (t = i * p[j]) <= n; ++j) {
@@ -134,4 +135,4 @@ struct EulerSieveNotPrime : public BaseSieve {
     }
 };
 
-EulerSieveNotPrime euler_sieve;
+SieveOfEulerNotPrime sieve;

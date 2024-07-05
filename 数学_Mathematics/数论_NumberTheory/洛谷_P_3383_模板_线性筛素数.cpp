@@ -16,7 +16,9 @@ void _RD(T& var) {
 }
 
 void _RD(char* var) {
-    cin >> (var + 1);
+    string str;
+    cin >> str;
+    strcpy(var + 1, str.c_str());
 }
 
 void RD() {}
@@ -105,48 +107,92 @@ void purin_online_test(bool ignore_test_case_count) {
 const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 
-namespace EulerSieveNotPrime {
+struct BaseSieve {
+    vector<int> p;
 
-vector<int> p;
-vector<bool> not_p;
-
-string to_string(int lim) {
-    string res = "p = [";
-    for (int j = 1; j < p.size() && j <= lim; ++j) {
-        res += std::to_string(p[j]) + ", ";
-    }
-    res = res.substr(0, max(0, (int)res.length() - 2)) + "]";
-    return res;
-}
-
-void show() {
-#ifdef LOCAL
-    cout << "[D] " << to_string(20) << endl;
-#endif
-}
-
-void euler_sieve(int n) {
-    p.clear();
-    not_p.clear(), not_p.resize(n + 2);
-    for (int i = 1; i <= n; ++i) {
-        if (not_p[i] == 0) {
-            p.push_back(i);
-        }
-        for (int j = 1, t; j < p.size() && (t = i * p[j]) <= n; ++j) {
-            not_p[t] = true;
-            if (i % p[j] == 0) {
+    string to_string(int lim) {
+        string res = "p = [";
+        for (const auto& d : p) {
+            if (d > lim) {
                 break;
+            }
+            res += std::to_string(d) + ", ";
+        }
+        res = res.substr(0, max(0, (int)res.length() - 2)) + "]";
+        return res;
+    }
+
+    void show() {
+#ifdef LOCAL
+        cout << "[D] " << to_string(20) << endl;
+#endif
+    }
+
+    template <typename function>
+    void calc_prime_divisor(ll x, bool skip_1, function f) {
+        if (!skip_1) {
+            f(1);
+        }
+        // Could be faster if preprocess minimal prime divisor of x
+        for (const auto& d : p) {
+            if (d * d > x) {
+                break;
+            }
+            if (d == 1 || x % d != 0) {
+                continue;
+            }
+            f(d);
+            while (x % d == 0) {
+                x /= d;
+            }
+        }
+        if (x != 1) {
+            f(x);
+        }
+    }
+
+    template <typename function>
+    void calc_any_divisor(ll x, bool skip_1, function f) {
+        if (!skip_1) {
+            f(1);
+        }
+        // Could be faster if preprocess all divisor of x
+        for (ll d = 2; d * d <= x; ++d) {
+            if (x % d != 0) {
+                continue;
+            }
+            f(d);
+            if (d * d != x) {
+                f(x / d);
             }
         }
     }
+};
 
-    show();
-}
-}  // namespace EulerSieveNotPrime
+// TODO 补充其他的数论函数
+struct SieveOfEratosthenesNotPrime : public BaseSieve {
+    vector<bool> not_p;
+
+    void init(int n) {
+        p.clear();
+        not_p.clear(), not_p.resize(n + 2);
+        for (int i = 1; i <= n; ++i) {
+            if (not_p[i] == 0) {
+                p.push_back(i);
+                for (int j = 2 * i; j <= n; j += i) {
+                    not_p[j] = true;
+                }
+            }
+        }
+        show();
+    }
+};
+
+SieveOfEratosthenesNotPrime sieve;
 
 void purin_init() {
     const int MAXN = 1e8;
-    EulerSieveNotPrime::euler_sieve(MAXN);
+    sieve.init(MAXN);
 }
 
 int n, q;
@@ -157,7 +203,7 @@ void purin_solve() {
     while (q--) {
         int k;
         RD(k);
-        WT(EulerSieveNotPrime::p[k]);
+        WT(sieve.p[k]);
     }
 }
 
