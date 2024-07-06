@@ -1,5 +1,7 @@
 # 布丁 Codeforces 库
 
+<!-- 有一个好完整的博客可以参考：https://www.cnblogs.com/GXZlegend/post-categories -->
+
 这一套模板是为了方便在 CF/LC 等线上比赛中复制粘贴而存在的，所以和 OI/ICPC 等线下比赛中使用的模板有较大差异。主要体现在以下方面：
 
 |                | OI/ICPC 等线下比赛                           | CF/LC 等线上比赛               |
@@ -88,8 +90,8 @@ TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源�
     > 倍增算法， Tarjan 算法，树链剖分算法
 - [ ] 最小生成树
     > Kruskal 算法， Prim 算法
-- [ ] ST表
-    > 线段树，笛卡尔树
+- [x] [稀疏表 ST表](https://www.luogu.com.cn/problem/P3865)
+    > 7月6日，已完成。其他替代品：线段树，笛卡尔树
 - [x] [贝尔曼福特 BellmanFord - 负环](https://www.luogu.com.cn/problem/P3385)
     > 6月22日，已完成。最好再弄一个经典版本的 BellmanFord ，我记得还有一个题叫做“汇率兑换”的。
 
