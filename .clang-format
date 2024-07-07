@@ -8,7 +8,7 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
-ColumnLimit: 100
+ColumnLimit: 80
 
 Standard: Cpp11
 SortIncludes: true
@@ -19,6 +19,8 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 
 AllowShortBlocksOnASingleLine: Never
-AllowShortFunctionsOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: Empty
+NamespaceIndentation: All
+# AllowShortFunctionsOnASingleLine: Inline
 # AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 # AllowShortLoopsOnASingleLine: true
