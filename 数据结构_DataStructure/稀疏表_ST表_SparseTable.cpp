@@ -2,6 +2,13 @@
 using namespace std;
 typedef long long ll;
 
+/**
+ * SparseTable can maintain range query of min/max values,
+ * bitwise_and (&), logical_and (&&) and gcd (__gcd), are also min values
+ * bitwise_or (|), logical_and (||) and lcm (__lcm), are also max values
+ *
+ * sum (+) and xor_sum (^) are not supported.
+ */
 struct SparseTable {
    private:
     static const int INF = 0x3F3F3F3F;
