@@ -3,27 +3,26 @@ using namespace std;
 typedef long long ll;
 
 /**
+ * 可持久化权值线段树
+ * 查询[l, r]区间内的第k小值
+ *
  * 模板题：
- * https://www.luogu.com.cn/problem/P1972
  * https://www.luogu.com.cn/problem/P3834
  */
 struct PersistentSegmentTree {
    private:
-    int len;
-    vector<int> _root;
-    vector<int> _val;  // 每个叶子节点存的是哪个值
-    vector<int> _sum, _lch,
-        _rch;  // sum的维护比较特殊，因为每次只有1个新元素加入
-
-    int cnt_node;
+    int _len;
+    vector<int> _val;
+    vector<int> _root, _sum, _lch, _rch;
 
     int get_idx(const int& val) {  // 找到val应该放在哪个叶子
-        return lower_bound(_val.begin() + 1, _val.begin() + 1 + len, val) -
+        return lower_bound(_val.begin() + 1, _val.begin() + 1 + _len, val) -
                _val.begin();
     }
 
     int get_new_u() {
-        int new_u = ++cnt_node;
+        int new_u = _sum.size();
+        _sum.push_back(0), _lch.push_back(0), _rch.push_back(0);
         return new_u;
     }
 
@@ -54,9 +53,6 @@ struct PersistentSegmentTree {
         return new_u;
     }
 
-    /**
-     * 查询[l, r]区间内的第k小
-     */
     int query(int lu, int ru, int l, int r, int k) {
         if (l == r) {
             return l;
@@ -70,29 +66,42 @@ struct PersistentSegmentTree {
         }
     }
 
-   public:
-    void init(int n, int* a) {
+    void init_val(int n, int* a) {
         _val.clear(), _val.resize(n + 2);
         for (int i = 1; i <= n; ++i) {
             _val[i] = a[i];
         }
         sort(_val.begin() + 1, _val.begin() + 1 + n);
-        len =
+        _len =
             unique(_val.begin() + 1, _val.begin() + 1 + n) - (_val.begin() + 1);
-        _sum.clear(), _lch.clear(), _rch.clear();
-        cnt_node = 0;
-        int reserve_size = (4 * len + n * (log2(len) + 1));
-        _sum.resize(reserve_size), _lch.resize(reserve_size),
-            _rch.resize(reserve_size);
+    }
+
+    void init_node(int n) {
+        int reserve_size = (4 * _len + n * (log2(_len) + 1));
+        _sum.clear(), _sum.reserve(reserve_size);
+        _lch.clear(), _lch.reserve(reserve_size);
+        _rch.clear(), _rch.reserve(reserve_size);
+        int skipped_u = get_new_u();  // skip u == 0
+    }
+
+    void init_root(int n, int* a) {
         _root.clear(), _root.resize(n + 2);
-        _root[0] = build(1, len);
+        _root[0] = build(1, _len);
         for (int i = 1; i <= n; ++i) {
-            _root[i] = update(1, len, get_idx(a[i]), _root[i - 1]);
+            _root[i] = update(1, _len, get_idx(a[i]), _root[i - 1]);
         }
     }
 
+   public:
+    void init(int n, int* a) {
+        init_val(n, a);
+        init_node(n);
+        init_root(n, a);
+    }
+
     int query(int l, int r, int k) {
-        int pos = query(_root[l - 1], _root[r], 1, len, k);
+        int pos = query(_root[l - 1], _root[r], 1, _len, k);
         return _val[pos];
     }
+
 } pst;
