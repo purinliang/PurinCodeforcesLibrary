@@ -2,6 +2,9 @@
 using namespace std;
 typedef long long ll;
 
+const int MAXN = 1e5 + 10;
+int a[MAXN];
+
 namespace MoAlgorithm {
 
     struct Query {
@@ -28,35 +31,35 @@ namespace MoAlgorithm {
     /* Calc Answer */
 
     int l, r;
-    ll ans;
+    int ans;
     vector<int> cnt;
 
-    ll sq(ll x) {
-        return x * x;
+    int contribution(int x) {
+        return x > 0;
     }
 
     void extend_left() {
-        // ans -= sq(cnt[a[l]]);
-        // ++cnt[a[l]];
-        // ans += sq(cnt[a[l]]);
+        ans -= contribution(cnt[a[l]]);
+        ++cnt[a[l]];
+        ans += contribution(cnt[a[l]]);
     }
 
     void extend_right() {
-        // ans -= sq(cnt[a[r]]);
-        // ++cnt[a[r]];
-        // ans += sq(cnt[a[r]]);
+        ans -= contribution(cnt[a[r]]);
+        ++cnt[a[r]];
+        ans += contribution(cnt[a[r]]);
     }
 
     void shrink_left() {
-        // ans -= sq(cnt[a[l]]);
-        // --cnt[a[l]];
-        // ans += sq(cnt[a[l]]);
+        ans -= contribution(cnt[a[l]]);
+        --cnt[a[l]];
+        ans += contribution(cnt[a[l]]);
     }
 
     void shrink_right() {
-        //     ans -= sq(cnt[a[r]]);
-        //     --cnt[a[r]];
-        //     ans += sq(cnt[a[r]]);
+        ans -= contribution(cnt[a[r]]);
+        --cnt[a[r]];
+        ans += contribution(cnt[a[r]]);
     }
 
     void calc_all_ans() {
@@ -67,7 +70,7 @@ namespace MoAlgorithm {
         });
 
         l = 1, r = 0, ans = 0LL;
-        // cnt.clear(), cnt.resize(k + 2);
+        cnt.clear(), cnt.resize(1e6 + 2);
         for (auto& [ql, qr, qid, qans] : q) {
             while (ql < l) {
                 --l;
