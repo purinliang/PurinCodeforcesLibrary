@@ -5,7 +5,7 @@ typedef long long ll;
 /**
  * ExGcd
  */
-struct ExtendedEuclid {
+struct ExtendedEuclidean {
    private:
     static ll ex_gcd(ll a, ll b, ll& x, ll& y) {
         if (b == 0) {
