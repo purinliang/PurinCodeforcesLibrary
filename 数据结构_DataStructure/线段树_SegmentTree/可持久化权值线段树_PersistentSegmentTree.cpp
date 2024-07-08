@@ -4,7 +4,8 @@ typedef long long ll;
 
 /**
  * 可持久化权值线段树
- * 查询[l, r]区间内的第k小值
+ * 俗称主席树
+ * 查询[l, r]区间内的第k小值，也可以用整体二分做
  *
  * 模板题：
  * https://www.luogu.com.cn/problem/P3834
