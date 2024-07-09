@@ -47,9 +47,7 @@ namespace MultiBinarySearch {
                                    // of mid rely on how L and R move
         int cnt_M = calc_cnt(M);   // when answer is M, calc the maximum cnt
         vector<Query> vec_qry_L, vec_qry_R;
-        // In certain problem, the parameter of Query would change, an example
-        // is the k-th element in certain interval [L, R], the parameter k
-        // should substract the count in left interval.
+        // In certain problem, the parameter of Query would change.
         for (auto& qry : vec_qry) {
             if (cnt_M < qry.cnt) {
                 // cannot meet the reqirement of qry, to left
