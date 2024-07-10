@@ -117,8 +117,8 @@ const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 
 const int MAXN = 2e5 + 10;
 int n, a[MAXN];
-vector<int> pos[MAXN];
 int len, idx[MAXN];
+vector<int> pos[MAXN];
 
 /** 单点加 */
 struct BinaryIndexTreeAdd {
@@ -175,11 +175,8 @@ namespace MultiBinarySearch {
         _vec_qry.push_back(qry);
     }
 
-    vector<int> sum;
-
-    void calc_k(int M,
-                int dir) {  // when answer is M, calc how many elements <= M
-        for (int i = 1; i <= M; ++i) {
+    void calc_k(int L, int M, int dir) {
+        for (int i = L; i <= M; ++i) {
             for (auto& p : pos[i]) {
                 bit_add.add(p, dir);
             }
@@ -191,64 +188,47 @@ namespace MultiBinarySearch {
         return qry.k > k_M;
     }
 
+    int partition(int ql, int qr) {
+        int i = ql, j = qr, qm;
+        while (i < j) {
+            for (; i < j && !is_right_query(_vec_qry[i]); ++i);
+            for (; i < j && is_right_query(_vec_qry[j]); --j);
+            if (i < j) {
+                swap(_vec_qry[i], _vec_qry[j]);
+                ++i, --j;
+            }
+        }
+        for (qm = qr; qm >= ql && is_right_query(_vec_qry[qm]); --qm);
+        return qm;
+    }
+
     void multi_bs(int L, int R, int ql, int qr) {
         if (L > R || ql > qr) {
             return;
         }
         if (L == R) {
-            // Just like normal binary search, if there is always an answer
-            // between the interval [L, R], then this solution is OK.
-            // Otherwise, you should check whether there is a valid answer
-            // when L == R.
-            for (int i = ql; i <= qr; ++i) {
-                Query& qry = _vec_qry[i];
-                _ans[qry.id] = idx[L];
+            for (int qi = ql; qi <= qr; ++qi) {
+                Query& qry = _vec_qry[qi];
+                _ans[qry.id] = L;
             }
             return;
         }
-        int M = (L + R) >> 1;  // Just like normal binary search, the value
-                               // of mid rely on how L and R move
-        calc_k(M, 1);
-
-        vector<Query> vec_qry_L, vec_qry_R;
-        // In certain problem, the parameter of Query would change.
-        int i = ql, j = qr;
-        while (i < j) {
-            while (i < j) {
-                // there are k_M elements in [l, r] that <= M
-                // k_M >= qry.k means that M may be too large, R = M
-                // to left
-                if (is_right_query(_vec_qry[i])) {
-                    ++i;
-                    continue;
-                }
-                break;
-            }
-            while (i < j) {
-                // there are k_M elements in [l, r] that <= M
-                // k_M < qry.k means that M must be too small, L = M + 1
-                // to right
-                if (!is_right_query(_vec_qry[i])) {
-                    --j;
-                    continue;
-                }
-                break;
-            }
-            if (i < j) {
-                swap(_vec_qry[i], _vec_qry[j]);
-                ++i;
-                --j;
-            }
+        int M = (L + R) >> 1;
+        calc_k(L, M, 1);
+        int qm = partition(ql, qr);
+        for (int qi = qm + 1; qi <= qr; ++qi) {
+            int k_M =
+                bit_add.sum(_vec_qry[qi].r) - bit_add.sum(_vec_qry[qi].l - 1);
+            _vec_qry[qi].k -= k_M;
         }
-        int qm = i - (!is_right_query(_vec_qry[i]));
-        calc_k(M, -1);
+        calc_k(L, M, -1);
         multi_bs(L, M, ql, qm);
         multi_bs(M + 1, R, qm + 1, qr);
         return;
     }
 
     void calc_all_ans(int L, int R) {
-        bit_add.init(R - L + 1);
+        bit_add.init(n);  // here is not len
         int cnt_q = _vec_qry.size();
         _ans.clear(), _ans.resize(cnt_q);
         multi_bs(L, R, 0, cnt_q - 1);
@@ -256,7 +236,7 @@ namespace MultiBinarySearch {
 
     void show_all_ans() {
         for (int i = 0; i < _ans.size(); ++i) {
-            cout << _ans[i] << endl;
+            cout << idx[_ans[i]] << endl;
         }
     }
 
@@ -278,7 +258,6 @@ void purin_solve() {
     for (int i = 1; i <= n; ++i) {
         a[i] = lower_bound(idx + 1, idx + 1 + len, a[i]) - idx;
     }
-    WTN(a, n);
     for (int i = 1; i <= len; ++i) {
         pos[i].clear();
     }
@@ -286,7 +265,6 @@ void purin_solve() {
         pos[a[i]].push_back(i);
     }
     init_query(m);
-    D(m);
     while (m--) {
         int l, r, k;
         RD(l, r, k);
