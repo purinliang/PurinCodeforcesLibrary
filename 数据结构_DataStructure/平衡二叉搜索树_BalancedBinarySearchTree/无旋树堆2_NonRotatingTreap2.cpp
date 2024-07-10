@@ -65,11 +65,11 @@ struct NonRotatingTreap2 {
         }
         if (_rnk <= node[node[u].lch].siz) {
             y = u;
-            SplitRank(node[u].lch, _rnk, x, node[u].lch);
+            SplitRank(node[u].lch, _rnk, x, node[y].lch);
             PushUp(y);
         } else {
             x = u;
-            SplitRank(node[u].rch, _rnk - node[node[u].lch].siz - 1, node[u].rch, y);
+            SplitRank(node[u].rch, _rnk - node[node[u].lch].siz - 1, node[x].rch, y);
             PushUp(x);
         }
     }
@@ -162,7 +162,7 @@ struct NonRotatingTreap2 {
         node.push_back(Node());
     }
 
-    void Insert(int val) {
+    void Insert(ll val) {
         if (node.size() == node.capacity()) {
             node.reserve(2 * node.capacity());
         }
