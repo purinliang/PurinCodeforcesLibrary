@@ -166,7 +166,7 @@ struct PersistentNonRotatingTreap2 {
         int idx = Size(ver) - CountGreaterThan(root[ver], val) + 1;
         auto [L, M, R] = Split3(ver, idx, idx - 1);
         M = NewNode(val);
-        int new_ver = GetNewVersion();
+        int new_ver = GetNewVersion();  // creat a new version
         Merge3(new_ver, L, M, R);
     }
 
@@ -178,12 +178,13 @@ struct PersistentNonRotatingTreap2 {
             int idx = count_less_than + 1;
             ReserveNodeVector();
             auto [L, M, R] = Split3(ver, idx, idx);
-            M = 0;  // M is removed
-            int new_ver = GetNewVersion();
+            M = 0;                          // M is removed
+            int new_ver = GetNewVersion();  // creat a new version
             Merge3(new_ver, L, M, R);
         } else {
+            // be careful, each operation must creat a new version
             int new_ver = GetNewVersion();
-            root[new_ver] = root[ver];  // be careful
+            root[new_ver] = root[ver];
         }
     }
 
@@ -195,7 +196,7 @@ struct PersistentNonRotatingTreap2 {
         ReserveNodeVector();
         auto [L, M, R] = Split3(ver, idx, idx);
         ll res = node[M].val;
-        int new_ver = GetNewVersion();
+        int new_ver = GetNewVersion();  // creat a new version
         Merge3(new_ver, L, M, R);
         return res;
     }
@@ -203,26 +204,29 @@ struct PersistentNonRotatingTreap2 {
     ll Prev(int ver, ll val) {
         int rnk = CountLessThan(root[ver], val);
         if (rnk <= 0) {
+            // be careful, each operation must creat a new version
             int new_ver = GetNewVersion();
-            root[new_ver] = root[ver];  // be careful
+            root[new_ver] = root[ver];
             return -(1LL << 31) + 1LL;
         }
-        return Value(ver, rnk);
+        return Value(ver, rnk);  // creat a new version
     }
 
     ll Next(int ver, ll val) {
         int rnk = Size(ver) - CountGreaterThan(root[ver], val) + 1;
         if (rnk > Size(ver)) {
+            // be careful, each operation must creat a new version
             int new_ver = GetNewVersion();
-            root[new_ver] = root[ver];  // be careful
+            root[new_ver] = root[ver];
             return (1LL << 31) - 1LL;
         }
-        return Value(ver, rnk);
+        return Value(ver, rnk);  // creat a new version
     }
 
     ll Rank(int ver, ll val) {
+        // be careful, each operation must creat a new version
         int new_ver = GetNewVersion();
-        root[new_ver] = root[ver];  // be careful
+        root[new_ver] = root[ver];
         return CountLessThan(root[ver], val) + 1;
     }
 
@@ -230,7 +234,7 @@ struct PersistentNonRotatingTreap2 {
         ReserveNodeVector();
         auto [L, M, R] = Split3(ver, lrnk, rrnk);
         ll res = node[M].sum;
-        int new_ver = GetNewVersion();
+        int new_ver = GetNewVersion();  // creat a new version
         Merge3(new_ver, L, M, R);
         return res;
     }
@@ -238,7 +242,7 @@ struct PersistentNonRotatingTreap2 {
     ll SumBetweenValue(int ver, ll lval, ll rval) {
         int lrnk = CountLessThan(root[ver], lval) + 1;
         int rrnk = Size(ver) - CountGreaterThan(root[ver], rval) + 1;
-        return SumBetweenRank(ver, lrnk, rrnk);
+        return SumBetweenRank(ver, lrnk, rrnk);  // creat a new version
     }
 
 } tree;
