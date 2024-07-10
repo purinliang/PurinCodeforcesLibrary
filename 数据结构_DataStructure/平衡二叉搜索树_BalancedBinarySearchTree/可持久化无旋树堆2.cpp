@@ -161,6 +161,8 @@ struct PersistentNonRotatingTreap2 {
         node.push_back(Node());
     }
 
+    // TODO: add a version that inserts element directly, rather than by finding
+    // idx at first
     void Insert(int ver, ll val) {
         ReserveNodeVector();
         int idx = Size(ver) - CountGreaterThan(root[ver], val) + 1;
@@ -170,6 +172,8 @@ struct PersistentNonRotatingTreap2 {
         Merge3(new_ver, L, M, R);
     }
 
+    // TODO: add a version that removes element directly, rather than by finding
+    // idx at first
     void Remove(int ver, ll val) {
         int count_less_than = CountLessThan(root[ver], val);
         int count_greater_than = CountGreaterThan(root[ver], val);
@@ -201,6 +205,8 @@ struct PersistentNonRotatingTreap2 {
         return res;
     }
 
+    // TODO: add a version that find element directly, rather than by finding
+    // idx at first
     ll Prev(int ver, ll val) {
         int rnk = CountLessThan(root[ver], val);
         if (rnk <= 0) {
@@ -212,6 +218,8 @@ struct PersistentNonRotatingTreap2 {
         return Value(ver, rnk);  // creat a new version
     }
 
+    // TODO: add a version that find element directly, rather than by finding
+    // idx at first
     ll Next(int ver, ll val) {
         int rnk = Size(ver) - CountGreaterThan(root[ver], val) + 1;
         if (rnk > Size(ver)) {
