@@ -173,7 +173,7 @@ struct NonRotatingTreap2 {
         root = Merge(Merge(L, M), R);
     }
 
-    void Remove(int val) {
+    void Remove(ll val) {
         int count_less_than = CountLessThan(val);
         int count_greater_than = CountGreaterThan(val);
         int count_equal_to = Size() - count_less_than - count_greater_than;
