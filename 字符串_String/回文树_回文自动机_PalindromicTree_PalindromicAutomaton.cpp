@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long ll;
 
-struct PalindromicAutoMaton {
+struct PalindromicAutomaton {
     struct Node {
         int ch[26] = {};
         int len, fail, dep;
@@ -58,4 +58,4 @@ struct PalindromicAutoMaton {
         R.push_back(node[next].dep);  // 以新字符为结尾的回文子串的数量
     }
 
-} pa;
+} pam;
