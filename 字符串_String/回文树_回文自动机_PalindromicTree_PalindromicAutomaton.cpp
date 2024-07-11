@@ -38,8 +38,7 @@ typedef long long ll;
  */
 struct PalindromicAutomaton {
     struct Node {
-        int ch[26] = {};
-        int len, fail;
+        int ch[26] = {}, len, fail;
 
         // Extended data
         int dep;  // the depth of the node on the fail tree
@@ -123,8 +122,7 @@ struct PalindromicAutomaton {
  */
 struct PalindromicAutomaton2 {
     struct Node {
-        int ch[26] = {};
-        int len, fail;
+        int ch[26] = {}, len, fail;
 
         // Extended Data
         /**
