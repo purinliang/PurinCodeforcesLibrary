@@ -119,6 +119,16 @@ const int MAXN = 5e5 + 10;
 int n;
 char s[MAXN];
 
+/**
+ * 模版题：
+ * https://www.luogu.com.cn/problem/P5496
+ * 对每个位置，求 以其为右端点的回文子串的出现次数
+ *
+ * 回文子串的长度为 len，回文子串的最长回文真后缀为 fail，当一个节点被 extend
+ * 之后被访问到，那么它作为最长回文子串出现次数加1，而它的各级 fail 父亲也应该
+ * + 1。对于这个新字符的位置，它出现的总次数就是当前节点的 fail 树的高度，本题
+ * 中选择额外用一个 R 数组存起来。dep 和 R 数组并非是回文自动机的一部分。
+ */
 struct PalindromicAutomaton {
     struct Node {
         int ch[26] = {};
@@ -155,7 +165,6 @@ struct PalindromicAutomaton {
         // 找到最长回文后缀
         while (s[slen() - node[u].len - 1] != s[slen()]) {
             u = node[u].fail;
-            D(u, node[u].fail);
         }
         return u;
     }
@@ -167,14 +176,14 @@ struct PalindromicAutomaton {
             next = new_node();
             node[next].len = node[u].len + 2;
             node[next].fail = node[fail(node[u].fail)].ch[c - 'a'];
-            // dep 表示 fail 树的高度，而非回文树的高度。 fail 树的高度
-            // 表示子串数量。回文树的高度表示子串长度（的一半）、
-            node[next].dep = node[node[next].fail].dep + 1;
-            // 这一行必须放在最后，否则会死循环
+            // 这一行必须放在上一行之后否则会死循环
             node[u].ch[c - 'a'] = next;
+            // dep 表示 fail 树的高度，而非回文树的高度。 fail 树的高度
+            // 表示子串数量。回文树的高度表示子串长度（的一半）。
+            node[next].dep = node[node[next].fail].dep + 1;
         }
         lst = next;
-        R.push_back(node[next].dep);  // 以新字符为结尾的回文子串的数量
+        R.push_back(node[lst].dep);  // 以新字符为结尾的回文子串的数量
     }
 
     void show_R() {
