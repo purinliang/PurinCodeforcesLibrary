@@ -62,7 +62,8 @@ struct PalindromicAutomaton {
             // 这一行必须放在上一行之后否则会死循环
             node[u].ch[c - 'a'] = next;
             // dep 表示 fail 树的高度，而非回文树的高度。 fail 树的高度
-            // 表示子串数量。回文树的高度表示子串长度（的一半）。
+            // 表示子串数量。回文树的高度表示子串长度（的一半），回文子串
+            // 的长度一般用 len 直接维护。
             node[next].dep = node[node[next].fail].dep + 1;
         }
         lst = next;
@@ -94,10 +95,11 @@ struct PalindromicAutomaton2 {
         /**
          * cnt:
          * before dp_on_fail_tree: how many times the substr occurs
-         * as the longest_palinromix_suffix.
+         * as the longest_palinromix_suffix. (can be int)
          * after dp_on_fail_tree: how many times the substr occurs.
+         * (should be long long)
          */
-        int cnt;
+        ll cnt;
     };
 
     vector<char> s;
@@ -120,9 +122,7 @@ struct PalindromicAutomaton2 {
         return nd_idx;
     }
 
-    int slen() {
-        return (int)s.size() - 1;
-    }
+    int slen() { return (int)s.size() - 1; }
 
     int fail(int u) {
         // 找到最长回文后缀
@@ -147,9 +147,13 @@ struct PalindromicAutomaton2 {
     }
 
     ll dp_on_fail_tree() {
-        // 注意回文自动机的第一个真实节点的下标是2
+        // 注意回文自动机的第一个真实节点的下标是2，最后一个节点的下标为
+        // node.size() - 1 而不是 lst。因为 lst 是最后一次扩展新字符后
+        // 停留的状态，未必是被新创建的状态。
+        // 倒序枚举节点顺序即可按 DAG 进行 DP。因为新节点的 fail 指针一定
+        // 指向旧节点。
         ll ans = 0LL;
-        for (int i = lst; i >= 2; --i) {
+        for (int i = node.size() - 1; i >= 2; --i) {
             node[node[i].fail].cnt += node[i].cnt;
             ll tans = 1LL * node[i].len * node[i].cnt;
             ans = max(ans, tans);
