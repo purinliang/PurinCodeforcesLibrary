@@ -125,15 +125,22 @@ struct SuffixAutomaton {
         int ch[26] = {};
         ll cnt = 0;
         Node() {};
+        void CopyNewNode(const int& l, const Node& n) {
+            len = l, link = n.link;
+            memcpy(ch, n.ch, sizeof(ch));
+            // cnt = 0;
+        }
     };
 
     vector<Node> node;
-    int root, last;  // last末尾节点的位置
+    int last;  // last末尾节点的位置
 
     void init() {
-        node.clear(), node.push_back(Node());
-        root = new_node();
-        last = root;
+        node.clear();
+        node.push_back(Node());
+        node.push_back(Node());
+        node[1] = Node();
+        last = 1;
     }
 
     int new_node() {
@@ -148,38 +155,37 @@ struct SuffixAutomaton {
         node[u] = Node();
         node[u].len = node[p].len + 1;
         node[u].cnt = 1;
-        while (p != 0 && !node[p].ch[ch - 'a']) {
+        for (; p && !node[p].ch[ch - 'a']; p = node[p].link)
             node[p].ch[ch - 'a'] = u;
-            p = node[p].link;
-        }
-        if (p == 0) {
-            node[u].link = root;
-        } else {
+        if (!p)
+            node[u].link = 1;
+        else {
             int q = node[p].ch[ch - 'a'];
             if (node[p].len + 1 == node[q].len)
                 node[u].link = q;
             else {
-                int clone_q = new_node();
-                node[clone_q].len = node[p].len + 1;
-                node[clone_q].link = node[q].link;
-                memcpy(node[clone_q].ch, node[q].ch, sizeof(node[clone_q].ch));
-                node[q].link = node[u].link = clone_q;
-                while (p != 0 && node[p].ch[ch - 'a'] == q) {
-                    node[p].ch[ch - 'a'] = clone_q;
-                    p = node[p].link;
-                }
+                int y = new_node();
+                node[y].CopyNewNode(node[p].len + 1, node[q]);
+                node[q].link = node[u].link = y;
+                for (; p && node[p].ch[ch - 'a'] == q; p = node[p].link)
+                    node[p].ch[ch - 'a'] = y;
             }
         }
     }
 
+    vector<int> d, rk;
+
     void dp_on_link_tree() {
         int siz = node.size() - 1;
-        vector<int> cnt_len(siz + 2), rk(siz + 2);
-        for (int i = 1; i <= siz; ++i) ++cnt_len[node[i].len];
-        for (int i = 1; i <= siz; ++i) cnt_len[i] += cnt_len[i - 1];
-        for (int i = 1; i <= siz; ++i) rk[cnt_len[node[i].len]--] = i;
+        d.clear(), d.resize(siz + 2);
+        rk.clear(), rk.resize(siz + 2);
+
+        for (int i = 1; i <= siz; ++i) ++d[node[i].len];
+        for (int i = 1; i <= siz; ++i) d[i] += d[i - 1];
+        for (int i = 1; i <= siz; ++i) rk[d[node[i].len]--] = i;
+
         for (int i = siz; i >= 1; --i) {
-            int u = rk[i], v = node[u].link;
+            int u = rk[i], v = node[u].link;  // 对u进行更新则达到了从底向上更新
             node[v].cnt += node[u].cnt;
         }
     }
