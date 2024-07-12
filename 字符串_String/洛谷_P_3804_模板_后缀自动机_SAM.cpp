@@ -175,7 +175,7 @@ struct SuffixAutomaton {
 
     vector<int> d, rk;
 
-    void dp_on_link_tree() {
+    void update_link() {
         int siz = node.size() - 1;
         d.clear(), d.resize(siz + 2);
         rk.clear(), rk.resize(siz + 2);
@@ -191,11 +191,12 @@ struct SuffixAutomaton {
     }
 
     ll answer1() {
-        dp_on_link_tree();
-        ll ans = 0LL;
+        update_link();
+        ll ans = 0;
         int siz = node.size() - 1;
-        for (int i = 1; i <= siz; ++i) {
-            ans = max(ans, 1LL * node[i].cnt * node[i].len);
+        for (int i = siz; i >= 1; --i) {
+            if (node[i].cnt > 1)
+                ans = max(ans, 1ll * node[i].cnt * node[i].len);
         }
         return ans;
     }
