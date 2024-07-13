@@ -4,13 +4,13 @@ typedef long long ll;
 
 struct AhoCorasickAutomaton {
     struct Node {
-        int ch[26], fail;
+        int ch[26] = {}, fail = 0;
         vector<int> fail_ch;
 
         // Extended data:
         // 在文本串中，当前节点被遍历的次数，也是当前节点作为最长真后缀的
         // 出现次数，在 dp_on_fail_tree 之后，为当前节点的出现次数
-        ll cnt;
+        ll cnt = 0LL;
     };
 
     int root;
@@ -29,6 +29,7 @@ struct AhoCorasickAutomaton {
 
     int new_node() {
         int idx = node.size();
+        // 显式调用默认构造函数才能自动初始化
         node.push_back(Node());
         return idx;
     }
