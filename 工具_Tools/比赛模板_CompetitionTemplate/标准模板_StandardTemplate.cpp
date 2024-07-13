@@ -131,7 +131,7 @@ void purin_solve() {
 }
 
 int main() {
-    const bool ignore_test_case_count = false;
+    const bool ignore_test_case_count = true;
 #ifdef LOCAL
     purin_local_test(ignore_test_case_count);
 #else
