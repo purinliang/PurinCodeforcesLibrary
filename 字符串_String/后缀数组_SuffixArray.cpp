@@ -7,7 +7,41 @@ namespace SuffixArray {
     int n;
     vector<int> sa, rk, height;
 
+    struct SparseTable {
+       private:
+        int _n;
+        vector<int> _log2;
+        vector<vector<int>> _st;
+
+       public:
+        void init(vector<int>& a, int n) {
+            _n = n;
+            _log2.clear(), _log2.resize(_n + 2);
+            for (int i = 2; i <= _n; ++i) {
+                _log2[i] = _log2[i >> 1] + 1;
+            }
+
+            _st.clear(), _st.resize(_n + 2);
+            for (int i = 1; i <= _n; ++i) {
+                _st[i].resize(_log2[_n] + 1);
+                _st[i][0] = a[i];
+            }
+            for (int j = 1; j <= _log2[_n]; ++j) {
+                for (int i = 1; i + (1 << j) - 1 <= _n; ++i) {
+                    _st[i][j] =
+                        std::min(_st[i][j - 1], _st[i + (1 << (j - 1))][j - 1]);
+                }
+            }
+        }
+
+        int query_min(int l, int r) {
+            int s = _log2[r - l + 1];
+            return std::min(_st[l][s], _st[r - (1 << s) + 1][s]);
+        }
+    } st;
+
     void suffix_sort(char* s) {
+        // SIGMA = 元素的值域，用来进行第一次排序，如果值域太大可以先离散化
         const int SIGMA = CHAR_MAX;
         n = strlen(s + 1);
         vector<int> cnt(max(n, SIGMA) + 2), rk2(n + 2);
@@ -26,8 +60,7 @@ namespace SuffixArray {
         };
         radix_sort(SIGMA);  // 第一次后缀排序，单个字符比较，相同字符排相同名次
 
-        // 比较排名为 i 的后缀和排名为 j 的后缀，在长度不超过 len 的前提下，
-        // 谁更小？i 是否小于 j？
+        // 比较排名为 i 的后缀和排名为 j 的后缀，长度不超过 len 时，是否 i < j
         auto cmp = [&](int i, int j, int len) {
             if (rk2[sa[i]] == rk2[sa[j]]) {
                 if (sa[i] + len <= n && sa[j] + len <= n) {
@@ -51,7 +84,7 @@ namespace SuffixArray {
                 rk[sa[i]] = lst_rk;
             }
         }
-        
+
         auto calc_height = [&]() {
             height.clear(), height.resize(n + 2);
             for (int i = 1, k = 0; i <= n; ++i) {
@@ -63,34 +96,26 @@ namespace SuffixArray {
             }
         };
         calc_height();
+        st.init(height, n);
     }
 
-    /**
-     * 未验证：后缀 sa[x] 和后缀 sa[y] 之间的 lcp 的长度
-     */
-    int lcp(int x, int y) {
+    // 从 x位置开始 和 从y位置开始 的子串的 lcp 的长度
+    int lcp(int x, int y) {  //
+        x = rk[x], y = rk[y];
         if (x > y) {
             swap(x, y);
         }
-        int res = n - y + 1;
-        for (int i = x + 1; i <= y; ++i) {
-            res = min(res, height[i]);
-        }
-        return res;
+        return st.query_min(x + 1, y);
     }
 
-    /**
-     * 未验证：比较子串 [l1, r1] 和子串 [l2, r2]
-     * lcp(sa[i], sa[j]) = min{height[i + 1], ..., height[j]};
-     * lcp(sa[i], sa[j]) = min{height[i + 1], ..., height[j]};
-     */
+    // 比较子串 [l1, r1] 和子串 [l2, r2] 的大小
     int cmp_substr(int l1, int r1, int l2, int r2) {
         int len1 = r1 - l1 + 1, len2 = r2 - l2 + 1;
         if (lcp(l1, l2) >= min(len1, len2)) {
             // 他们的最长公共前缀的长度超过需要比较的区间
-            return len1 < len2;
+            return len1 == len2 ? 0 : len1 < len2 ? -1 : 1;
         }
-        return rk[l1] < rk[l2];  // 否则返回他们的后缀排序名次
+        return rk[l1] < rk[l2] ? -1 : 1;  // 否则返回他们的后缀排序名次
     }
 
     /**
