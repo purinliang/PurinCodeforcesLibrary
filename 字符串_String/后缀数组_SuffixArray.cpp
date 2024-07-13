@@ -51,17 +51,18 @@ namespace SuffixArray {
                 rk[sa[i]] = lst_rk;
             }
         }
-    }
-
-    void calc_height(char* s) {
-        height.clear(), height.resize(n + 2);
-        for (int i = 1, k = 0; i <= n; ++i) {
-            if (rk[i] == 1) continue;  // 第一名的 height 为 0
-            if (k > 0) --k;            // h[i] >= h[i - 1] + 1;
-            int j = sa[rk[i] - 1];
-            while (j + k <= n && i + k <= n && s[i + k] == s[j + k]) ++k;
-            height[rk[i]] = k;  // h[i] = height[rk[i]];
-        }
+        
+        auto calc_height = [&]() {
+            height.clear(), height.resize(n + 2);
+            for (int i = 1, k = 0; i <= n; ++i) {
+                if (rk[i] == 1) continue;  // 第一名的 height 为 0
+                if (k > 0) --k;            // h[i] >= h[i - 1] + 1;
+                int j = sa[rk[i] - 1];
+                while (j + k <= n && i + k <= n && s[i + k] == s[j + k]) ++k;
+                height[rk[i]] = k;  // h[i] = height[rk[i]];
+            }
+        };
+        calc_height();
     }
 
     /**
@@ -80,6 +81,8 @@ namespace SuffixArray {
 
     /**
      * 未验证：比较子串 [l1, r1] 和子串 [l2, r2]
+     * lcp(sa[i], sa[j]) = min{height[i + 1], ..., height[j]};
+     * lcp(sa[i], sa[j]) = min{height[i + 1], ..., height[j]};
      */
     int cmp_substr(int l1, int r1, int l2, int r2) {
         int len1 = r1 - l1 + 1, len2 = r2 - l2 + 1;
@@ -128,3 +131,19 @@ namespace SuffixArray {
     }
 
 }  // namespace SuffixArray
+
+/**
+ * 牢记两个数组的意义：
+ * sa[i] 数组：排名为 i 的后缀的起始位置为 sa[i]
+ * rk[i] 数组：以 i 为开头的后缀，在后缀排序中的名次为 rk[i]
+ *
+ * 恒等式： sa[rk[i]] == i, 且 sa[rk[i]] == i
+ *
+ * 也就是说：通过字符串的位置比较大小关系，用 rk 数组，通过字符串
+ * 的大小
+ *
+ *
+ * 最小循环表示：
+ * 将字符串复制一遍拼在原串之后，求一次后缀数组。
+ * 取所有 sa <= n 的位置（后缀的开始位置在原字符串长度以内），就是所有循环表示。
+ */
