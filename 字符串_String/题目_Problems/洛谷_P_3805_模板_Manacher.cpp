@@ -116,6 +116,7 @@ const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 
 const int MAXN = 1.1e7 + 10;
+
 char s[MAXN];
 
 struct Manacher {
@@ -124,7 +125,10 @@ struct Manacher {
     vector<int> len;
 
     // 字符串 s，1-index，首字符是 s[1] 的字符串；n 字符串长度
-    void init(char* s, int n) {
+    void init(char* s, int n = -1) {
+        if (n == -1) {
+            n = strlen(s + 1);
+        }
         len.clear(), len.resize(2 * n + 2);
         // 最右回文串的位置为 [lm, rm]
         int lm = 0, rm = -1;
@@ -151,11 +155,20 @@ struct Manacher {
     }
 
     // 所有满足 i == l + r 的子串 [l, r] 中的最长回文串的长度
-    int max_length_palindrome(int i) { return 2 * len[i] - (i % 2 == 0); }
+    int longest_palindrome_length(int i) {
+        return 2 * len[i] - (i % 2 == 0);
+    }
+
+    // 所有满足 i == l + r 的子串 [l, r] 中的最长回文串的范围
+    pair<int, int> longest_palindrome_range(int i) {
+        int lmid = i / 2, rmid = i - lmid;
+        int l = lmid - len[i] + 1, r = rmid + len[i] - 1;
+        return {l, r};  // longest_palindrome_length(i) == r - l + 1
+    }
 
     // 判断子串 [l, r] 是否为回文串
     bool is_palindrome(int l, int r) {
-        return max_length_palindrome(l + r) >= (r - l + 1);
+        return longest_palindrome_length(l + r) >= (r - l + 1);
     }
 
 } manacher;
@@ -168,7 +181,7 @@ void purin_solve() {
     manacher.init(s, n);
     int ans = 0;
     for (int i = 1; i <= 2 * n; ++i) {
-        ans = max(ans, manacher.max_length_palindrome(i));
+        ans = max(ans, manacher.longest_palindrome_length(i));
     }
     WT(ans);
 }
