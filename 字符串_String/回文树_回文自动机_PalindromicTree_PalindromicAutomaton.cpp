@@ -38,10 +38,10 @@ typedef long long ll;
  */
 struct PalindromicAutomaton {
     struct Node {
-        int ch[26] = {}, len, fail;
+        int ch[26] = {}, len = 0, fail = 0;
 
         // Extended data
-        int dep;  // the depth of the node on the fail tree
+        int dep = 0;  // the depth of the node on the fail tree
     };
 
     vector<char> s;
@@ -64,6 +64,7 @@ struct PalindromicAutomaton {
 
     int new_node() {
         int nd_idx = node.size();
+        // 显式调用默认构造函数才能自动初始化
         node.push_back(Node());
         return nd_idx;
     }
@@ -122,7 +123,7 @@ struct PalindromicAutomaton {
  */
 struct PalindromicAutomaton2 {
     struct Node {
-        int ch[26] = {}, len, fail;
+        int ch[26] = {}, len = 0, fail = 0;
 
         // Extended Data
         /**
@@ -132,7 +133,7 @@ struct PalindromicAutomaton2 {
          * after dp_on_fail_tree: how many times the substr occurs.
          * (should be long long)
          */
-        ll cnt;
+        ll cnt = 0LL;
     };
 
     vector<char> s;
