@@ -2,6 +2,9 @@
 using namespace std;
 typedef long long ll;
 
+/**
+ * TODO： 删除，回收节点，统一所有平衡树的接口
+ */
 struct Treap {
    private:
     static const int DEFAULT_CAPACITY = 3e5 + 10;
