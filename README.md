@@ -64,7 +64,7 @@
 
 #### 数学
 
-[组合数学_Combinatorics](https://github.com/purinliang/PurinCodeforcesLibrary/blob/main/%E6%95%B0%E5%AD%A6_Mathematics/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6_Combinatorics.cpp)
+[组合数学_Combinatorics ver.2](https://github.com/purinliang/PurinCodeforcesLibrary/blob/main/%E6%95%B0%E5%AD%A6_Mathematics/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6_Combinatorics.cpp)
 
 
 ### 洛谷难度分级目录
@@ -73,7 +73,7 @@
 
 以下按照难度增序排列。标题中的数字表示其在 Codeforces 中的难度区间。
 
-TODO: 认真阅读每一篇的题解，有时候有新的发现，比如单源最短路BellmanFord和传递闭包bitset。
+**TODO**: 认真阅读每一篇的题解，有时候有新的发现，比如单源最短路BellmanFord和传递闭包bitset。
 
 #### 普及- (900~1100) ![](https://img.shields.io/badge/%E6%99%AE%E5%8F%8A---orange)
 
