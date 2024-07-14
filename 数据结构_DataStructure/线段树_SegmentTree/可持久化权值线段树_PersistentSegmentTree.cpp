@@ -58,6 +58,8 @@ struct PersistentSegmentTree {
         if (l == r) {
             return new_u;
         }
+        // 如果存在 lazy_tag 则要先复制子节点再下推，因为一个子节点
+        // 可能属于多个版本，直接下推会导致影响其他版本
         int mid = (l + r) >> 1;
         if (pos <= mid) {
             _lch[new_u] = update(l, mid, pos, _lch[old_u]);
@@ -71,6 +73,8 @@ struct PersistentSegmentTree {
         if (l == r) {
             return l;
         }
+        // 如果存在 lazy_tag 则要先复制子节点再下推，因为一个子节点
+        // 可能属于多个版本，直接下推会导致影响其他版本
         int left_sum = _sum[_lch[ru]] - _sum[_lch[lu]];
         int mid = (l + r) >> 1;
         if (k <= left_sum) {
