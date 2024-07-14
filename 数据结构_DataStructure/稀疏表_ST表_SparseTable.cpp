@@ -8,6 +8,8 @@ typedef long long ll;
  * bitwise_or (|), logical_and (||) and lcm (__lcm), are also max values
  *
  * sum (+) and xor_sum (^) are not supported.
+ *
+ * TODO: There is an O(n) init - O(1) query version
  */
 struct SparseTable {
    private:
@@ -39,7 +41,8 @@ struct SparseTable {
         }
     }
 
-    T query_help(int l, int r, vector<vector<T>>& st, function<T(T, T)>& op, T op_iden) {
+    T query_help(int l, int r, vector<vector<T>>& st, function<T(T, T)>& op,
+                 T op_iden) {
         l = max(l, 1), r = min(r, _n);
         if (l > r) {
             return op_iden;
@@ -64,11 +67,15 @@ struct SparseTable {
     /**
      * min[l, r]
      */
-    T query1(int l, int r) { return query_help(l, r, _st1, _op1, _op1_iden); }
+    T query1(int l, int r) {
+        return query_help(l, r, _st1, _op1, _op1_iden);
+    }
 
     /**
      * max[l, r]
      */
-    T query2(int l, int r) { return query_help(l, r, _st2, _op2, _op2_iden); }
+    T query2(int l, int r) {
+        return query_help(l, r, _st2, _op2, _op2_iden);
+    }
 
 } st;
