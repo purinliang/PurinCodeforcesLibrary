@@ -7,9 +7,10 @@ typedef long long ll;
  *
  * The elements are managed by index (just like std::vector).
  *
- * This data-structure supports almostly all kinds of of the interval operations, like range_sum,
- * range_max, range_min. range_add and range_set (just like SegmentTree), and what's more important,
- * the RANGE_REVERSE operation.
+ * This data-structure supports almostly all kinds of of the interval
+ * operations, like range_sum, range_max, range_min. range_add and range_set
+ * (just like SegmentTree), and what's more important, the RANGE_REVERSE
+ * operation.
  */
 struct NonRotatingTreap {
    private:
@@ -48,9 +49,12 @@ struct NonRotatingTreap {
 
     void PushUp(int u) {
         node[u].siz = node[node[u].lch].siz + 1 + node[node[u].rch].siz;
-        node[u].sum = node[node[u].lch].sum + node[u].val + node[node[u].rch].sum;
-        // node[u].min = std::min({node[node[u].lch].min, node[u].val, node[node[u].rch].min});
-        // node[u].max = std::max({node[node[u].lch].max, node[u].val, node[node[u].rch].max});
+        node[u].sum =
+            node[node[u].lch].sum + node[u].val + node[node[u].rch].sum;
+        // node[u].min = std::min({node[node[u].lch].min, node[u].val,
+        // node[node[u].rch].min}); node[u].max =
+        // std::max({node[node[u].lch].max, node[u].val,
+        // node[node[u].rch].max});
     }
 
     int NewNode(ll _val) {
@@ -62,8 +66,12 @@ struct NonRotatingTreap {
     void PushDown(int u) {
         if (node[u].rev_tag) {
             swap(node[u].lch, node[u].rch);
-            node[node[u].lch].rev_tag ^= true;
-            node[node[u].rch].rev_tag ^= true;
+            if (node[u].lch) {
+                node[node[u].lch].rev_tag ^= true;
+            }
+            if (node[u].rch) {
+                node[node[u].rch].rev_tag ^= true;
+            }
             node[u].rev_tag = false;
         }
     }
@@ -108,27 +116,32 @@ struct NonRotatingTreap {
         }
         PushDown(u);
         string m_res = node[u].to_string(u);
-        string l_res = node[u].lch ? (compressed_to_string(node[u].lch) + ", ") : "";
-        string r_res = node[u].rch ? (", " + compressed_to_string(node[u].rch)) : "";
+        string l_res =
+            node[u].lch ? (compressed_to_string(node[u].lch) + ", ") : "";
+        string r_res =
+            node[u].rch ? (", " + compressed_to_string(node[u].rch)) : "";
         return l_res + m_res + r_res;
     }
 
     // string to_string(int u, int dep, string dir) {
     //     string m_prefix = string(dep * 4, ' ') + dir;
     //     string m_res = u ? (node[u].to_string(u) + "\n") : "";
-    //     string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") : "";
-    //     string r_res = node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
-    //     return l_res + m_prefix + m_res + r_res;
+    //     string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") :
+    //     ""; string r_res = node[u].rch ? to_string(node[u].rch, dep + 1,
+    //     "\\ ") : ""; return l_res + m_prefix + m_res + r_res;
     // }
 
     string to_string(int u, string prefix, bool is_lch) {
         if (!u) {
             return "";
         }
-        string m_prefix = prefix + (u != root ? ((is_lch ? "╭── " : "╰── ")) : "");
+        string m_prefix =
+            prefix + (u != root ? ((is_lch ? "╭── " : "╰── ")) : "");
         string m_res = node[u].to_string(u) + "\n";
-        string l_prefix = prefix + ((u != root) ? (is_lch ? "    " : "│   ") : "");
-        string r_prefix = prefix + ((u != root) ? (!is_lch ? "    " : "│   ") : "");
+        string l_prefix =
+            prefix + ((u != root) ? (is_lch ? "    " : "│   ") : "");
+        string r_prefix =
+            prefix + ((u != root) ? (!is_lch ? "    " : "│   ") : "");
         string l_res = to_string(node[u].lch, l_prefix, true);
         string r_res = to_string(node[u].rch, r_prefix, false);
         return l_res + m_prefix + m_res + r_res;
@@ -142,7 +155,9 @@ struct NonRotatingTreap {
         return {lroot, mroot, rroot};
     }
 
-    void Merge3(int lroot, int mroot, int rroot) { root = Merge(Merge(lroot, mroot), rroot); }
+    void Merge3(int lroot, int mroot, int rroot) {
+        root = Merge(Merge(lroot, mroot), rroot);
+    }
 
     void show(int lroot, int mroot, int rroot) {
 #ifdef LOCAL
@@ -155,7 +170,9 @@ struct NonRotatingTreap {
     }
 
    public:
-    NonRotatingTreap() { Init(); }
+    NonRotatingTreap() {
+        Init();
+    }
 
     void Init(int capacity = DEFAULT_CAPACITY) {
         if (capacity + 2 > node.capacity()) {
@@ -181,7 +198,9 @@ struct NonRotatingTreap {
         Merge3(L, M, R);
     }
 
-    int Size() { return node[root].siz; }
+    int Size() {
+        return node[root].siz;
+    }
 
     ll Value(int idx) {
         auto [L, M, R] = Split3(idx, idx);
@@ -203,7 +222,9 @@ struct NonRotatingTreap {
         Merge3(L, M, R);
     }
 
-    string to_string(int u) { return "NonRotatingTreap = [\n" + to_string(u, "", false) + "]"; }
+    string to_string(int u) {
+        return "NonRotatingTreap = [\n" + to_string(u, "", false) + "]";
+    }
 
     void show() {
 #ifdef LOCAL
