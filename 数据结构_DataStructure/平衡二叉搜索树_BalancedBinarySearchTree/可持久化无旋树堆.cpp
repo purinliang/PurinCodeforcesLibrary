@@ -59,6 +59,8 @@ struct PersistentNonRotatingTreap {
     }
 
     void PushDown(int u) {
+        // 如果存在 lazy_tag 则要先复制子节点再下推，因为一个子节点
+        // 可能属于多个版本，直接下推会导致影响其他版本
         if (node[u].rev_tag) {
             swap(node[u].lch, node[u].rch);
             if (node[u].lch) {
@@ -78,12 +80,16 @@ struct PersistentNonRotatingTreap {
             x = 0, y = 0;
             return;
         }
+        // 如果 PushDown 成功，则会复制两个子节点并把信息更新的新的子节点上。
+        // 绝对不会影响其他版本。
         PushDown(u);
         if (_rnk <= node[node[u].lch].siz) {
+            // 在 Split 之前复制可以保证不影响其他版本，在 Merge 时则无需复制
             y = CloneNode(u);
             SplitRank(node[u].lch, _rnk, x, node[y].lch);
             PushUp(y);
         } else {
+            // 在 Split 之前复制可以保证不影响其他版本，在 Merge 时则无需复制
             x = CloneNode(u);
             SplitRank(node[u].rch, _rnk - node[node[u].lch].siz - 1,
                       node[x].rch, y);
@@ -92,9 +98,13 @@ struct PersistentNonRotatingTreap {
     }
 
     int Merge(int x, int y) {
+        // 在 Merge 时则无需复制，一个节点本身就属于多个父节点。
+        // 只需要把当前的信息返回调用自己的父节点即可，其他版本不会受影响。
         if (!x || !y) {
             return x | y;
         }
+        // 如果 PushDown 成功，则会复制两个子节点并把信息更新的新的子节点上。
+        // 绝对不会影响其他版本。
         PushDown(x), PushDown(y);
         if (node[x].rnd < node[y].rnd) {
             node[x].rch = Merge(node[x].rch, y);
@@ -119,9 +129,16 @@ struct PersistentNonRotatingTreap {
     }
 
     void ReserveNodeVector() {
-        const int SAFE_CAPACITY_MARGIN = 128;
-        while (node.size() + SAFE_CAPACITY_MARGIN > node.capacity()) {
-            node.reserve(4 * node.capacity());
+        const int SAFE_CAPACITY_MARGIN = 512;
+        // 由于一次操作的 Split 和 Merge 在每一层都会导致 2 次复制，
+        // 可以假设最坏情况下，rand 得不均匀，树有25层，每次操作 Split 两次，
+        // Merge 两次，需要新增 200 个节点。
+        int next_node_capacity = node.capacity();
+        while (node.size() + SAFE_CAPACITY_MARGIN > next_node_capacity) {
+            next_node_capacity *= 2;
+        }
+        if (next_node_capacity > node.capacity()) {
+            node.reserve(next_node_capacity);
         }
     }
 
