@@ -47,6 +47,8 @@ struct PersistentArray {
             _val[new_u] = val;
             return new_u;
         }
+        // 如果存在 lazy_tag 则要先复制子节点再下推，因为一个子节点
+        // 可能属于多个版本，直接下推会导致影响其他版本
         int mid = (l + r) >> 1;
         if (pos <= mid) {
             _lch[new_u] = update(l, mid, pos, val, _lch[old_u]);
@@ -60,6 +62,8 @@ struct PersistentArray {
         if (l == r) {
             return _val[u];
         }
+        // 如果存在 lazy_tag 则要先复制子节点再下推，因为一个子节点
+        // 可能属于多个版本，直接下推会导致影响其他版本
         int mid = (l + r) >> 1;
         if (pos <= mid) {
             return query(_lch[u], l, mid, pos);
