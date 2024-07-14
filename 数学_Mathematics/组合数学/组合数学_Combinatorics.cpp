@@ -15,11 +15,11 @@ struct Combinatorics {
     vector<int> fac, inv_fac;
 
     ll qpow(ll x, ll n) {
-        ll res = 1;
-        for (; n; n >>= 1) {
-            if (n & 1LL) {
-                res = res * x % MOD;
-            }
+        // assert(n >= 0);
+        // assert(MOD > 1);
+        ll res = 1LL;
+        for (; n > 0LL; n >>= 1) {
+            if (n & 1LL) res = res * x % MOD;
             x = x * x % MOD;
         }
         return res;
@@ -34,7 +34,7 @@ struct Combinatorics {
     //     assert(m <= MAX_M);
     //     ll res = 1LL;
     //     for (int i = 1; i <= m; ++i) {
-    //         res = 1LL * res * (n + 1 - i) % MOD;
+    //         res = 1LL * res * (n + 1LL - i) % MOD;
     //     }
     //     return res;
     // }
@@ -50,9 +50,7 @@ struct Combinatorics {
    public:
     void init(int n) {
         const int cur_max_n = (int)fac.size() - 1;
-        if (n <= cur_max_n) {
-            return;
-        }
+        if (n <= cur_max_n) return;
         n = max(n, 2 * cur_max_n);
         fac.resize(n + 1), inv_fac.resize(n + 1);
         for (int i = cur_max_n + 1; i <= n; ++i) {
@@ -66,18 +64,14 @@ struct Combinatorics {
 
     /** Calc P(n, m) % MOD, this function will auto-init. */
     ll P(ll n, ll m) {
-        if (n < 0LL || m < 0LL || n < m) {
-            return 0LL;
-        }
+        if (n < 0LL || m < 0LL || n < m) return 0LL;
         init(n);
         return 1LL * fac[n] * inv_fac[n - m] % MOD;
     }
 
     /** Calc C(n, m) % MOD, this function will auto-init. */
     ll C(ll n, ll m) {
-        if (n < 0LL || m < 0LL || n < m) {
-            return 0LL;
-        }
+        if (n < 0LL || m < 0LL || n < m) return 0LL;
         init(n);
         return 1LL * P(n, m) * inv_fac[m] % MOD;
     }
@@ -87,25 +81,28 @@ struct Combinatorics {
     // /** Distribute identitical balls into distinct boxes,
     //  * and boxes can be empty. */
     // ll balls_and_boxes_0(ll balls, ll boxes) {
-    //     return C(balls + boxes - 1, balls);
+    //     return C(balls + boxes - 1LL, balls);
     // }
 
     // /** Distribute identitical balls into distinct boxes,
     //  * and each box has at least one ball. */
-    // ll balls_and_boxes_1(ll balls, ll boxes) { return C(balls - 1, boxes -
-    // 1); }
+    // ll balls_and_boxes_1(ll balls, ll boxes) {
+    //     return C(balls - 1LL, boxes - 1LL);
+    // }
 
     // ll stars_and_bars_0(ll stars, ll bars) {
-    //     return balls_and_boxes_0(stars, bars + 1);
+    //     return balls_and_boxes_0(stars, bars + 1LL);
     // }
 
     // ll stars_and_bars_1(ll stars, ll bars) {
-    //     return balls_and_boxes_1(stars, bars + 1);
+    //     return balls_and_boxes_1(stars, bars + 1LL);
     // }
 
     // ll H(ll n) {
-    //     // Or H[n] = 1LL * (4 * n - 2) * inv(n + 1) % MOD * H[n - 1] % MOD;
-    //     return C(2 * n, n) - C(2 * n, n - 1);
+    //     // Or H[n] = 1LL * (4LL * n - 2LL) * inv(n + 1LL) % MOD * H[n - 1LL]
+    //     %
+    //     // MOD;
+    //     return C(2LL * n, n) - C(2LL * n, n - 1LL);
     // }
 
 } comb;
