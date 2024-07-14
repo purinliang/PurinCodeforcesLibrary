@@ -99,7 +99,7 @@
 - [x] [字符串哈希]( https://www.luogu.com.cn/problem/P3370)
     > 这道题不是字符串哈希的真正用途，字符串哈希最大的用途是用于比较子串，可以用 Manacher 来验证。6月22日，已完成。
 - [x] [弗洛伊德 Floyd - 全源最短路](https://www.luogu.com.cn/problem/B3647)
-    > 6月22日，已完成。
+    > 6月22日，已完成。另外有同名的 Floyd 双指针判圈算法。
 - [x] [拓扑排序](https://www.luogu.com.cn/problem/B3644)
     > 6月22日，已完成。
 
@@ -146,7 +146,7 @@
     > Kruskal 算法， Prim 算法
 - [x] [稀疏表 ST表](https://www.luogu.com.cn/problem/P3865)
     > 7月6日，已完成。其他替代品：线段树，笛卡尔树
-- [x] [贝尔曼福特 BellmanFord - 负环](https://www.luogu.com.cn/problem/P3385)
+- [x] [贝尔曼福特 BellmanFord - 负圈](https://www.luogu.com.cn/problem/P3385)
     > 6月22日，已完成。最好再弄一个经典版本的 BellmanFord ，我记得还有一个题叫做“汇率兑换”的。
 
 <br>
@@ -350,7 +350,8 @@
 - [ ] Pfaffian（线性代数的？）
 - [ ] 最小割树
 - [ ] 快速莫比乌斯变换，快速沃尔什变换
-- [ ] PollardRho
+- [x] [PollardRho](https://www.luogu.com.cn/problem/P4718)
+    > 7月15日，已完成。这个是质因数分解的 PollardRho 算法，另外有求离散对数的同名算法。
 
 <br>
 
@@ -381,6 +382,11 @@
 - [ ] 多项式乘法FFT
 - [ ] 类欧几里得算法
 - [ ] 高精度乘法
+
+补充部分：
+
+- [ ] [MillerRabin](https://www.luogu.com.cn/problem/P4718)
+    >  7月15日，已完成。
 
 #### NOI/NOI+/CTSC (3000-3500) ![](https://img.shields.io/badge/NOI/NOI+/CTSC-black)
 
