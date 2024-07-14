@@ -117,9 +117,9 @@ typedef long long ll;
  *
  * The elements are automatically sorted (just like std::multi_set).
  *
- * This data-structure supports a small part of the interval operations, like range_sum,
- * range_max, range_min. Other interval operations, like range_add, range_set and RANGE_REVERSE are
- * not supported.
+ * This data-structure supports a small part of the interval operations, like
+ * range_sum, range_max, range_min. Other interval operations, like range_add,
+ * range_set and RANGE_REVERSE are not supported.
  */
 struct NonRotatingTreap2 {
    private:
@@ -157,9 +157,12 @@ struct NonRotatingTreap2 {
 
     void PushUp(int u) {
         node[u].siz = node[node[u].lch].siz + 1 + node[node[u].rch].siz;
-        node[u].sum = node[node[u].lch].sum + node[u].val + node[node[u].rch].sum;
-        // node[u].min = std::min({node[node[u].lch].min, node[u].val, node[node[u].rch].min});
-        // node[u].max = std::max({node[node[u].lch].max, node[u].val, node[node[u].rch].max});
+        node[u].sum =
+            node[node[u].lch].sum + node[u].val + node[node[u].rch].sum;
+        // node[u].min = std::min({node[node[u].lch].min, node[u].val,
+        // node[node[u].rch].min}); node[u].max =
+        // std::max({node[node[u].lch].max, node[u].val,
+        // node[node[u].rch].max});
     }
 
     int NewNode(ll _val) {
@@ -179,7 +182,8 @@ struct NonRotatingTreap2 {
             PushUp(y);
         } else {
             x = u;
-            SplitRank(node[u].rch, _rnk - node[node[u].lch].siz - 1, node[u].rch, y);
+            SplitRank(node[u].rch, _rnk - node[node[u].lch].siz - 1,
+                      node[u].rch, y);
             PushUp(x);
         }
     }
@@ -215,7 +219,8 @@ struct NonRotatingTreap2 {
         } else if (node[u].val <= _val) {
             return CountGreaterThan(node[u].rch, _val);
         } else {
-            return CountGreaterThan(node[u].lch, _val) + 1 + node[node[u].rch].siz;
+            return CountGreaterThan(node[u].lch, _val) + 1 +
+                   node[node[u].rch].siz;
         }
     }
 
@@ -224,8 +229,10 @@ struct NonRotatingTreap2 {
             return "";
         }
         string m_res = node[u].to_string(u);
-        string l_res = node[u].lch ? (compressed_to_string(node[u].lch) + ", ") : "";
-        string r_res = node[u].rch ? (", " + compressed_to_string(node[u].rch)) : "";
+        string l_res =
+            node[u].lch ? (compressed_to_string(node[u].lch) + ", ") : "";
+        string r_res =
+            node[u].rch ? (", " + compressed_to_string(node[u].rch)) : "";
         return l_res + m_res + r_res;
     }
 
@@ -233,7 +240,8 @@ struct NonRotatingTreap2 {
         string m_prefix = string(dep * 4, ' ') + dir;
         string m_res = u ? (node[u].to_string(u) + "\n") : "";
         string l_res = node[u].lch ? to_string(node[u].lch, dep + 1, "/ ") : "";
-        string r_res = node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
+        string r_res =
+            node[u].rch ? to_string(node[u].rch, dep + 1, "\\ ") : "";
         return l_res + m_prefix + m_res + r_res;
     }
 
@@ -248,7 +256,9 @@ struct NonRotatingTreap2 {
     }
 
    public:
-    NonRotatingTreap2() { Init(); }
+    NonRotatingTreap2() {
+        Init();
+    }
 
     void Init(int capacity = DEFAULT_CAPACITY) {
         if (capacity + 2 > node.capacity()) {
@@ -284,13 +294,21 @@ struct NonRotatingTreap2 {
         }
     }
 
-    int CountLessThan(ll val) { return CountLessThan(root, val); }
+    int CountLessThan(ll val) {
+        return CountLessThan(root, val);
+    }
 
-    int CountGreaterThan(ll val) { return CountGreaterThan(root, val); }
+    int CountGreaterThan(ll val) {
+        return CountGreaterThan(root, val);
+    }
 
-    int Size() { return node[root].siz; }
+    int Size() {
+        return node[root].siz;
+    }
 
-    int Rank(ll val) { return CountLessThan(val) + 1; }
+    int Rank(ll val) {
+        return CountLessThan(val) + 1;
+    }
 
     ll Value(int rnk) {
         int L = 0, M = 0, R = 0;
@@ -333,7 +351,9 @@ struct NonRotatingTreap2 {
         return SumBetweenRank(lrnk, rrnk);
     }
 
-    string to_string(int u) { return "NonRotatingTreap = [\n" + to_string(u, 1, "") + "]"; }
+    string to_string(int u) {
+        return "NonRotatingTreap = [\n" + to_string(u, 1, "") + "]";
+    }
 
     void show() {
 #ifdef LOCAL
