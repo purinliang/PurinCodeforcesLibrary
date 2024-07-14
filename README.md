@@ -64,7 +64,7 @@
 
 #### 数学
 
-组合数学
+[组合数学_Combinatorics](https://github.com/purinliang/PurinCodeforcesLibrary/blob/main/%E6%95%B0%E5%AD%A6_Mathematics/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6_Combinatorics.cpp)
 
 
 ### 洛谷难度分级目录
