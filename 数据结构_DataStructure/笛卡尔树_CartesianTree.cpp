@@ -64,4 +64,6 @@ struct CartesianTree {
         dfs(rt);
     }
 
+    // 求区间最值，转成LCA问题
+
 } c_tree;
