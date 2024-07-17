@@ -4,8 +4,10 @@ typedef long long ll;
 
 /**
  * Combinatorics
- * Verify problem: https://www.luogu.com.cn/problem/B3717
- * Verify submission: https://www.luogu.com.cn/record/166012826 July 14, 2024
+ *
+ * July 14, 2024
+ * problem: https://www.luogu.com.cn/problem/B3717
+ * submission: https://www.luogu.com.cn/record/166012826
  */
 struct Combinatorics {
    private:
