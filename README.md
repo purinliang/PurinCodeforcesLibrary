@@ -140,8 +140,8 @@
 
 - [x] [树状数组 - 区间加值单点求和](https://www.luogu.com.cn/problem/P3368)
     > 区间加值，单点求和。简单维护一下差分数组，已有。跳过。
-- [ ] 最近公共祖先
-    > 倍增算法， Tarjan 算法，树链剖分算法
+- [x] [最近公共祖先 - LCA](https://www.luogu.com.cn/problem/P3379)
+    > 7月17日，已完成：倍增算法、轻重链剖分算法。TODO： Tarjan 算法
 - [ ] 最小生成树
     > Kruskal 算法， Prim 算法
 - [x] [稀疏表 ST表](https://www.luogu.com.cn/problem/P3865)
