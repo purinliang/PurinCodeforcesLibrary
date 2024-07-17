@@ -3,42 +3,40 @@ using namespace std;
 typedef long long ll;
 
 struct DisjointSetUnion {
-    int _n;
-    vector<int> _prt, _siz;
+    int n;
+    vector<int> prt, siz;
 
     void init(int n) {
-        _n = n;
-        _prt.clear(), _prt.resize(_n + 2);
-        _siz.clear(), _siz.resize(_n + 2);
-        for (int i = 1; i <= _n; i++) {
-            _prt[i] = i, _siz[i] = 1;
+        this->n = n;
+        prt.clear(), prt.resize(n + 2);
+        siz.clear(), siz.resize(n + 2);
+        for (int i = 1; i <= n; ++i) {
+            prt[i] = i, siz[i] = 1;
         }
     }
 
-    int find(int x) {
-        int rt = x;
-        while (_prt[rt] != rt) {
-            rt = _prt[rt];
+    int find(int u) {
+        int ru = u;
+        while (prt[ru] != ru) {
+            ru = prt[ru];
         }
-        int prtx = _prt[x];
-        while (prtx != rt) {
-            _prt[x] = rt;
-            x = prtx, prtx = _prt[x];
+        int p = prt[u];
+        while (p != ru) {
+            prt[u] = ru;
+            u = p, p = prt[u];
         }
-        return rt;
+        return ru;
     }
 
-    bool same(int x, int y) { return find(x) == find(y); }
+    bool same(int u, int v) {
+        return find(u) == find(v);
+    }
 
-    bool merge(int x, int y) {
-        int rx = find(x), ry = find(y);
-        if (rx == ry) {
-            return false;
-        }
-        if (_siz[rx] < _siz[ry]) {
-            swap(rx, ry);
-        }
-        _prt[ry] = rx, _siz[rx] += _siz[ry];
+    bool merge(int u, int v) {
+        int ru = find(u), rv = find(v);
+        if (ru == rv) return false;
+        if (siz[ru] < siz[rv]) swap(ru, rv);
+        prt[rv] = ru, siz[ru] += siz[rv];
         return true;
     }
 
