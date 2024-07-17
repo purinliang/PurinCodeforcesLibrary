@@ -2,6 +2,13 @@
 using namespace std;
 typedef long long ll;
 
+/**
+ * DisjointSetUnion
+ *
+ * July 17, 2024
+ * problem: https://www.luogu.com.cn/problem/P3367
+ * submission: https://www.luogu.com.cn/record/166689145
+ */
 struct DisjointSetUnion {
     int n;
     vector<int> prt, siz;
