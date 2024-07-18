@@ -44,11 +44,11 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         stk.push_back(u);
     }
 
-    void dfs_2(int u) {
-        scc[u] = scc_cnt, scc_vertex[scc_cnt].push_back(u);
+    void dfs_2(int u, int scc_id) {
+        scc[u] = scc_id, scc_vertex[scc_id].push_back(u);
         for (const auto& v : GT[u]) {
             if (scc[v] > 0) continue;
-            dfs_2(v);
+            dfs_2(v, scc_id);
         }
     }
 
@@ -63,8 +63,7 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         reverse(stk.begin(), stk.end());
         for (const auto& u : stk) {
             if (scc[u] > 0) continue;
-            ++scc_cnt;
-            dfs_2(u);
+            dfs_2(u, ++scc_cnt);
         }
         for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
             // 同一个强连通分量里面的点是完全等价的，sort一下
@@ -83,11 +82,11 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
             // A[scc[u]] += a[u];
 
             for (const auto& v : G[u]) {
+                if (scc[u] == scc[v]) continue;  // 去除自环，不一定有必要
                 DAG[scc[u]].push_back(scc[v]);
                 DAGT[scc[v]].push_back(scc[u]);
             }
         }
-        // 现在DAG中包含平行边和自环
         // 去除平行边，不一定有必要
         auto sort_unique = [](vector<int>& vec) {
             sort(vec.begin(), vec.end());
@@ -96,19 +95,6 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
             sort_unique(DAG[scc_u]);
             sort_unique(DAGT[scc_u]);
-        }
-        // 去除自环，不一定有必要
-        auto remove_loop = [](vector<int>& vec, int u) {
-            vector<int> tmp;
-            for (const auto& v : vec) {
-                if (v == u) continue;
-                tmp.push_back(v);
-            }
-            vec = tmp;
-        };
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            remove_loop(DAG[scc_u], scc_u);
-            remove_loop(DAGT[scc_u], scc_u);
         }
     }
 
