@@ -2,6 +2,8 @@
 using namespace std;
 typedef long long ll;
 
+const int n = 3e5 + 10;
+
 /**
  * StronglyConnectedComponent - KosarajuAlgorithm
  *
@@ -9,14 +11,11 @@ typedef long long ll;
  * submission: https://www.luogu.com.cn/record/166846520 July 18, 2024
  */
 namespace StronglyConnectedComponentKosarajuAlgorithm {
-    const int MAXN = 3e5 + 10;
 
-    int n;
     vector<int> G[MAXN];
     vector<int> GT[MAXN];  // G的反向图
 
-    void init(int _n) {
-        n = _n;
+    void init() {
         for (int i = 1; i <= n; ++i) {
             G[i].clear();
             GT[i].clear();
@@ -77,8 +76,12 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     vector<int> DAGT[MAXN];  // DAG的反向图
 
     void build_dag() {  // 对缩点之后的图建立DAG
+        // fill(A + 1, A + 1 + scc_cnt, 0LL);
+
         for (int i = 1; i <= n; ++i) DAG[i].clear(), DAGT[i].clear();
         for (int u = 1; u <= n; ++u) {
+            // A[scc[u]] += a[u];
+
             for (const auto& v : G[u]) {
                 DAG[scc[u]].push_back(scc[v]);
                 DAGT[scc[v]].push_back(scc[u]);
@@ -109,90 +112,35 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         }
     }
 
-    void topo_dag() {
-        // 出度为0的先出队
+    ll topo_dag() {
         queue<int> que;
         vector<int> out_deg(scc_cnt + 2);
         for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
             out_deg[scc_u] = DAG[scc_u].size();
             if (out_deg[scc_u] == 0) que.push(scc_u);
         }
+
+        ll ans = 0LL;
+        // fill(DP + 1, DP + 1 + scc_cnt, 0LL);
+
         while (!que.empty()) {
             int scc_u = que.front();
             que.pop();
-            // 在这里处理第scc_u个强连通分量
+
+            // for (const auto& scc_v : DAG[scc_u]) {
+            //     DP[scc_u] = max(DP[scc_u], DP[scc_v]);
+            // }
+            // DP[scc_u] += A[scc_u];
+            // ans = max(ans, DP[scc_u]);
+
             for (const auto& scc_v : DAGT[scc_u]) {
                 --out_deg[scc_v];
                 if (out_deg[scc_v] == 0) que.push(scc_v);
-                // 在这里处理转移信息给第scc_v个强连通分量
             }
         }
+        return ans;
     }
 
 }  // namespace StronglyConnectedComponentKosarajuAlgorithm
 
 using namespace StronglyConnectedComponentKosarajuAlgorithm;
-
-/**
- * 下面的代码未验证
- */
-namespace StronglyConnectedComponentDAG {
-    vector<int> DAG[MAXN];   // 缩点之后的DAG，节点为scc_u
-    vector<int> DAGT[MAXN];  // DAG的反向图
-
-    void build_dag() {  // 对缩点之后的图建立DAG
-        for (int i = 1; i <= n; ++i) DAG[i].clear(), DAGT[i].clear();
-        for (int u = 1; u <= n; ++u) {
-            for (const auto& v : G[u]) {
-                DAG[scc[u]].push_back(scc[v]);
-                DAGT[scc[v]].push_back(scc[u]);
-            }
-        }
-        // 现在DAG中包含平行边和自环
-        // 去除平行边，不一定有必要
-        auto sort_unique = [](vector<int>& vec) {
-            sort(vec.begin(), vec.end());
-            vec.erase(unique(vec.begin(), vec.end()), vec.end());
-        };
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            sort_unique(DAG[scc_u]);
-            sort_unique(DAGT[scc_u]);
-        }
-        // 去除自环，不一定有必要
-        auto remove_loop = [](vector<int>& vec, int u) {
-            vector<int> tmp;
-            for (const auto& v : vec) {
-                if (v == u) continue;
-                tmp.push_back(v);
-            }
-            vec = tmp;
-        };
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            remove_loop(DAG[scc_u], scc_u);
-            remove_loop(DAGT[scc_u], scc_u);
-        }
-    }
-
-    void topo_dag() {
-        // 出度为0的先出队
-        queue<int> que;
-        vector<int> out_deg(scc_cnt + 2);
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            out_deg[scc_u] = DAG[scc_u].size();
-            if (out_deg[scc_u] == 0) que.push(scc_u);
-        }
-        while (!que.empty()) {
-            int scc_u = que.front();
-            que.pop();
-            // 在这里处理第scc_u个强连通分量
-            for (const auto& scc_v : DAGT[scc_u]) {
-                --out_deg[scc_v];
-                if (out_deg[scc_v] == 0) que.push(scc_v);
-                // 在这里处理转移信息给第scc_v个强连通分量
-            }
-        }
-    }
-
-}  // namespace StronglyConnectedComponentDAG
-
-using namespace StronglyConnectedComponentDAG;
