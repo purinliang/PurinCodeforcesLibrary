@@ -269,13 +269,6 @@ void purin_solve() {
         cout << endl;
         printed[scc[i]] = true;
     }
-    // build_dag();
-    // for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-    //     for (int u : DAG[scc_u]) {
-    //         cout << u << " ";
-    //     }
-    //     cout << endl;
-    // }
 }
 
 int main() {
