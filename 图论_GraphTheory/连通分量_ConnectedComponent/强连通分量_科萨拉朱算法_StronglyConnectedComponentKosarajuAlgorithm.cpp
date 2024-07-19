@@ -16,15 +16,11 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     vector<int> GT[MAXN];  // G的反向图
 
     void init() {
-        for (int i = 1; i <= n; ++i) {
-            G[i].clear();
-            GT[i].clear();
-        }
+        for (int i = 1; i <= n; ++i) G[i].clear(), GT[i].clear();
     }
 
     void add_edge(int u, int v) {
-        G[u].push_back(v);
-        GT[v].push_back(u);
+        G[u].push_back(v), GT[v].push_back(u);
     }
 
     bool vis[MAXN];
@@ -38,17 +34,14 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     void dfs_1(int u) {
         if (vis[u]) return;
         vis[u] = true;
-        for (const auto& v : G[u]) {
-            dfs_1(v);
-        }
+        for (const auto& v : G[u]) dfs_1(v);
         stk.push_back(u);
     }
 
     void dfs_2(int u, int scc_id) {
         scc[u] = scc_id, scc_vertex[scc_id].push_back(u);
         for (const auto& v : GT[u]) {
-            if (scc[v] > 0) continue;
-            dfs_2(v, scc_id);
+            if (scc[v] == 0) dfs_2(v, scc_id);
         }
     }
 
@@ -62,13 +55,12 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         for (int i = 1; i <= n; ++i) scc_vertex[i].clear();
         reverse(stk.begin(), stk.end());
         for (const auto& u : stk) {
-            if (scc[u] > 0) continue;
-            dfs_2(u, ++scc_cnt);
+            if (scc[u] == 0) dfs_2(u, ++scc_cnt);
         }
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            // 同一个强连通分量里面的点是完全等价的，sort一下
-            sort(scc_vertex[scc_u].begin(), scc_vertex[scc_u].end());
-        }
+        // for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
+        //     // 同一个强连通分量里面的点是完全等价的，sort一下
+        //     sort(scc_vertex[scc_u].begin(), scc_vertex[scc_u].end());
+        // }
     }
 
     vector<int> DAG[MAXN];   // 缩点之后的DAG，节点为scc_u
