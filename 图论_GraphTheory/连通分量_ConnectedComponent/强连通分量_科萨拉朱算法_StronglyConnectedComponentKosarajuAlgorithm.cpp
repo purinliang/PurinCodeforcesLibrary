@@ -6,6 +6,10 @@ const int n = 3e5 + 10;
 
 /**
  * StronglyConnectedComponent - KosarajuAlgorithm
+ * 
+ * KosarajuAlgorithm and TopoSort require the TransposedGraph,
+ * costing extra memory usage. To find a faster way to solve the
+ * same problem, see TarjanAlgorithm and MemorizedSearch.
  *
  * problem: https://www.luogu.com.cn/problem/B3609
  * submission: https://www.luogu.com.cn/record/166846520 July 18, 2024
