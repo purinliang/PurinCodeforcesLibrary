@@ -6,18 +6,20 @@ const int n = 3e5 + 10;
 
 /**
  * StronglyConnectedComponent - KosarajuAlgorithm
- * 
+ *
  * KosarajuAlgorithm and TopoSort require the TransposedGraph,
  * costing extra memory usage. To find a faster way to solve the
  * same problem, see TarjanAlgorithm and MemorizedSearch.
  *
  * problem: https://www.luogu.com.cn/problem/B3609
  * submission: https://www.luogu.com.cn/record/166846520 July 18, 2024
+ *
+ * problem: https://www.luogu.com.cn/problem/P3387
+ * submission: https://www.luogu.com.cn/record/167309497 July 20, 2024
  */
 namespace StronglyConnectedComponentKosarajuAlgorithm {
 
-    vector<int> G[MAXN];
-    vector<int> GT[MAXN];  // G的反向图
+    vector<int> G[MAXN], GT[MAXN];  // Transposed Graph
 
     void init() {
         for (int i = 1; i <= n; ++i) G[i].clear(), GT[i].clear();
@@ -32,8 +34,8 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     int scc_cnt;
     // scc[u] == id: 节点u属于第id个SCC
     int scc[MAXN];
-    // scc_vertex[id] == {u1, u2, u3, ...}: 第id个SCC的所有节点
-    vector<int> scc_vertex[MAXN];
+    // // scc_vertex[id] == {u1, u2, u3, ...}: 第id个SCC的所有节点
+    // vector<int> scc_vertex[MAXN];
 
     void dfs_1(int u) {
         if (vis[u]) return;
@@ -43,7 +45,8 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     }
 
     void dfs_2(int u, int scc_id) {
-        scc[u] = scc_id, scc_vertex[scc_id].push_back(u);
+        scc[u] = scc_id;
+        // scc_vertex[scc_id].push_back(u);
         for (const auto& v : GT[u]) {
             if (scc[v] == 0) dfs_2(v, scc_id);
         }
@@ -56,7 +59,7 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
 
         scc_cnt = 0;
         fill(scc + 1, scc + 1 + n, 0);
-        for (int i = 1; i <= n; ++i) scc_vertex[i].clear();
+        // for (int i = 1; i <= n; ++i) scc_vertex[i].clear();
         reverse(stk.begin(), stk.end());
         for (const auto& u : stk) {
             if (scc[u] == 0) dfs_2(u, ++scc_cnt);
@@ -67,22 +70,22 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         // }
     }
 
-    vector<int> DAG[MAXN];   // 缩点之后的DAG，节点为scc_u
-    vector<int> DAGT[MAXN];  // DAG的反向图
+    vector<int> DAG[MAXN];  // 缩点后的DAG，节点为scc_u
+    ll A[MAXN];             // 节点scc_u的压缩信息
+    ll F[MAXN];             // 从节点scc_u的开始的路径的压缩信息
 
     void build_dag() {  // 对缩点之后的图建立DAG
         // fill(A + 1, A + 1 + scc_cnt, 0LL);
+        for (int i = 1; i <= n; ++i) DAG[i].clear();
 
-        for (int i = 1; i <= n; ++i) DAG[i].clear(), DAGT[i].clear();
         for (int u = 1; u <= n; ++u) {
             // A[scc[u]] += a[u];
-
             for (const auto& v : G[u]) {
                 if (scc[u] == scc[v]) continue;  // 去除自环，不一定有必要
                 DAG[scc[u]].push_back(scc[v]);
-                DAGT[scc[v]].push_back(scc[u]);
             }
         }
+
         // 去除平行边，不一定有必要
         auto sort_unique = [](vector<int>& vec) {
             sort(vec.begin(), vec.end());
@@ -90,37 +93,22 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         };
         for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
             sort_unique(DAG[scc_u]);
-            sort_unique(DAGT[scc_u]);
         }
     }
 
-    ll topo_dag() {
-        queue<int> que;
-        vector<int> out_deg(scc_cnt + 2);
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            out_deg[scc_u] = DAG[scc_u].size();
-            if (out_deg[scc_u] == 0) que.push(scc_u);
+    void init_f_dag() {
+        fill(F + 1, F + 1 + scc_cnt, -1LL);  // 以-1表示未访问
+    }
+
+    ll calc_f_dag(int scc_u) {
+        if (F[scc_u] != -1) return F[scc_u];
+        ll res = 0LL;
+        for (const auto& scc_v : DAG[scc_u]) {
+            res = max(res, calc_f_dag(scc_v));
         }
-
-        ll ans = 0LL;
-        // fill(DP + 1, DP + 1 + scc_cnt, 0LL);
-
-        while (!que.empty()) {
-            int scc_u = que.front();
-            que.pop();
-
-            // for (const auto& scc_v : DAG[scc_u]) {
-            //     DP[scc_u] = max(DP[scc_u], DP[scc_v]);
-            // }
-            // DP[scc_u] += A[scc_u];
-            // ans = max(ans, DP[scc_u]);
-
-            for (const auto& scc_v : DAGT[scc_u]) {
-                --out_deg[scc_v];
-                if (out_deg[scc_v] == 0) que.push(scc_v);
-            }
-        }
-        return ans;
+        res += A[scc_u];
+        F[scc_u] = res;
+        return res;
     }
 
 }  // namespace StronglyConnectedComponentKosarajuAlgorithm
