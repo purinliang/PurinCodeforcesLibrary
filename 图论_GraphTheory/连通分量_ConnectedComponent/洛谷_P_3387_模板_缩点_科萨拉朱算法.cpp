@@ -112,33 +112,33 @@ void purin_online_test(bool ignore_test_case_count) {
 
 /* MY CODE BEGIN */
 
-const int MAXN = 3e5 + 10;
+const int MAXN = 1e4 + 10;
 int n, m;
 int a[MAXN];
-ll A[MAXN];
-ll DP[MAXN];
 
 /**
  * StronglyConnectedComponent - KosarajuAlgorithm
  *
+ * KosarajuAlgorithm and TopoSort require the TransposedGraph,
+ * costing extra memory usage. To find a faster way to solve the
+ * same problem, see TarjanAlgorithm and MemorizedSearch.
+ *
  * problem: https://www.luogu.com.cn/problem/B3609
  * submission: https://www.luogu.com.cn/record/166846520 July 18, 2024
+ *
+ * problem: https://www.luogu.com.cn/problem/P3387
+ * submission: https://www.luogu.com.cn/record/167309497 July 20, 2024
  */
 namespace StronglyConnectedComponentKosarajuAlgorithm {
 
-    vector<int> G[MAXN];
-    vector<int> GT[MAXN];  // G的反向图
+    vector<int> G[MAXN], GT[MAXN];  // Transposed Graph
 
     void init() {
-        for (int i = 1; i <= n; ++i) {
-            G[i].clear();
-            GT[i].clear();
-        }
+        for (int i = 1; i <= n; ++i) G[i].clear(), GT[i].clear();
     }
 
     void add_edge(int u, int v) {
-        G[u].push_back(v);
-        GT[v].push_back(u);
+        G[u].push_back(v), GT[v].push_back(u);
     }
 
     bool vis[MAXN];
@@ -146,23 +146,18 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     int scc_cnt;
     // scc[u] == id: 节点u属于第id个SCC
     int scc[MAXN];
-    // scc_vertex[id] == {u1, u2, u3, ...}: 第id个SCC的所有节点
-    vector<int> scc_vertex[MAXN];
 
     void dfs_1(int u) {
         if (vis[u]) return;
         vis[u] = true;
-        for (const auto& v : G[u]) {
-            dfs_1(v);
-        }
+        for (const auto& v : G[u]) dfs_1(v);
         stk.push_back(u);
     }
 
-    void dfs_2(int u) {
-        scc[u] = scc_cnt, scc_vertex[scc_cnt].push_back(u);
+    void dfs_2(int u, int scc_id) {
+        scc[u] = scc_id;
         for (const auto& v : GT[u]) {
-            if (scc[v] > 0) continue;
-            dfs_2(v);
+            if (scc[v] == 0) dfs_2(v, scc_id);
         }
     }
 
@@ -173,35 +168,28 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
 
         scc_cnt = 0;
         fill(scc + 1, scc + 1 + n, 0);
-        for (int i = 1; i <= n; ++i) scc_vertex[i].clear();
         reverse(stk.begin(), stk.end());
         for (const auto& u : stk) {
-            if (scc[u] > 0) continue;
-            ++scc_cnt;
-            dfs_2(u);
-        }
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            // 同一个强连通分量里面的点是完全等价的，sort一下
-            sort(scc_vertex[scc_u].begin(), scc_vertex[scc_u].end());
+            if (scc[u] == 0) dfs_2(u, ++scc_cnt);
         }
     }
 
-    vector<int> DAG[MAXN];   // 缩点之后的DAG，节点为scc_u
-    vector<int> DAGT[MAXN];  // DAG的反向图
+    vector<int> DAG[MAXN];  // 缩点后的DAG，节点为scc_u
+    ll A[MAXN];             // 节点scc_u的压缩信息
+    ll F[MAXN];             // 从节点scc_u的开始的路径的压缩信息
 
     void build_dag() {  // 对缩点之后的图建立DAG
         fill(A + 1, A + 1 + scc_cnt, 0LL);
+        for (int i = 1; i <= n; ++i) DAG[i].clear();
 
-        for (int i = 1; i <= n; ++i) DAG[i].clear(), DAGT[i].clear();
         for (int u = 1; u <= n; ++u) {
             A[scc[u]] += a[u];
-
             for (const auto& v : G[u]) {
+                if (scc[u] == scc[v]) continue;  // 去除自环，不一定有必要
                 DAG[scc[u]].push_back(scc[v]);
-                DAGT[scc[v]].push_back(scc[u]);
             }
         }
-        // 现在DAG中包含平行边和自环
+
         // 去除平行边，不一定有必要
         auto sort_unique = [](vector<int>& vec) {
             sort(vec.begin(), vec.end());
@@ -209,48 +197,28 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         };
         for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
             sort_unique(DAG[scc_u]);
-            sort_unique(DAGT[scc_u]);
-        }
-        // 去除自环，不一定有必要
-        auto remove_loop = [](vector<int>& vec, int u) {
-            vector<int> tmp;
-            for (const auto& v : vec) {
-                if (v == u) continue;
-                tmp.push_back(v);
-            }
-            vec = tmp;
-        };
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            remove_loop(DAG[scc_u], scc_u);
-            remove_loop(DAGT[scc_u], scc_u);
         }
     }
 
-    ll topo_dag() {
-        queue<int> que;
-        vector<int> out_deg(scc_cnt + 2);
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            out_deg[scc_u] = DAG[scc_u].size();
-            if (out_deg[scc_u] == 0) que.push(scc_u);
-        }
-
-        ll ans = 0LL;
-        fill(DP + 1, DP + 1 + scc_cnt, 0LL);
-
-        while (!que.empty()) {
-            int scc_u = que.front();
-            que.pop();
-
+    ll calc_dag() {
+        auto init_f_dag = [&]() {
+            fill(F + 1, F + 1 + scc_cnt, -1LL);  // 以-1表示未访问
+        };
+        auto dfs_f_dag = [&](auto& self, int scc_u) {
+            if (F[scc_u] != -1) return F[scc_u];
+            ll res = 0LL;
             for (const auto& scc_v : DAG[scc_u]) {
-                DP[scc_u] = max(DP[scc_u], DP[scc_v]);
+                res = max(res, self(self, scc_v));
             }
-            DP[scc_u] += A[scc_u];
-            ans = max(ans, DP[scc_u]);
+            res += A[scc_u];
+            F[scc_u] = res;
+            return res;
+        };
 
-            for (const auto& scc_v : DAGT[scc_u]) {
-                --out_deg[scc_v];
-                if (out_deg[scc_v] == 0) que.push(scc_v);
-            }
+        init_f_dag();
+        ll ans = 0LL;
+        for (int u = 1; u <= n; ++u) {
+            ans = max(ans, dfs_f_dag(dfs_f_dag, u));
         }
         return ans;
     }
@@ -272,7 +240,7 @@ void purin_solve() {
     }
     kosaraju();
     build_dag();
-    ll ans = topo_dag();
+    ll ans = calc_dag();
     WT(ans);
 }
 
