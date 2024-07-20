@@ -74,12 +74,10 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         }
 
         // // 去除平行边，一般没有必要
-        // auto sort_unique = [](vector<int>& vec) {
+        // for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
+        //     auto& vec = DAG[scc_u];
         //     sort(vec.begin(), vec.end());
         //     vec.erase(unique(vec.begin(), vec.end()), vec.end());
-        // };
-        // for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-        //     sort_unique(DAG[scc_u]);
         // }
     }
 
