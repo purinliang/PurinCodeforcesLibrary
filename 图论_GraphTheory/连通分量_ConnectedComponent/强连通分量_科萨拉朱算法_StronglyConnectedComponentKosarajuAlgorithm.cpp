@@ -110,7 +110,7 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         init_f_dag();
         ll ans = 0LL;
         for (int u = 1; u <= n; ++u) {
-            ans = max(ans, dfs_f_dag(dfs_f_dag, u));
+            ans = max(ans, dfs_f_dag(dfs_f_dag, scc[u]));
         }
         return ans;
     }
