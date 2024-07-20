@@ -10,19 +10,18 @@ typedef long long ll;
  * submission:
  * https://leetcode.cn/problems/count-visited-nodes-in-a-directed-graph/submissions/548149138/
  */
-struct StronglyConnectedComponentKosarajuAlgorithm {
+namespace StronglyConnectedComponentKosarajuAlgorithm {
     typedef long long ll;
 
     int n;
     vector<vector<int>> G, GT;  // Transposed Graph
 
-    void init(int n) {
-        this->n = n;
+    void init() {
         G.resize(n + 2), GT.resize(n + 2);
         for (int i = 1; i <= n; ++i) G[i].clear(), GT[i].clear();
     }
 
-    void add_edge(int u, int v) {
+    void add_directed_edge(int u, int v) {
         G[u].push_back(v), GT[v].push_back(u);
     }
 
@@ -40,7 +39,7 @@ struct StronglyConnectedComponentKosarajuAlgorithm {
         };
         for (int u = 1; u <= n; ++u) dfs_1(dfs_1, u);
 
-        scc_cnt = 0, scc.resize(n + 2);
+        scc_cnt = 0, scc.clear(), scc.resize(n + 2);
         auto dfs_2 = [&](auto& self, int u, int scc_id) -> void {
             scc[u] = scc_id;
             for (const auto& v : GT[u]) {
@@ -53,11 +52,12 @@ struct StronglyConnectedComponentKosarajuAlgorithm {
     }
 
     vector<vector<int>> DAG;  // 缩点后的DAG，节点为scc_u
-    vector<int> A;            // 节点scc_u的压缩信息
-    vector<int> F;            // 从节点scc_u的开始的路径的最优信息
+    vector<ll> A;             // 节点scc_u的压缩信息
+    vector<ll> F;             // 从节点scc_u的开始的路径的最优信息
 
     void build_dag() {  // 对缩点之后的图建立DAG
-        A.resize(scc_cnt + 2), DAG.resize(scc_cnt + 2);
+        DAG.clear(), DAG.resize(scc_cnt + 2);
+        A.clear(), A.resize(scc_cnt + 2);
 
         for (int u = 1; u <= n; ++u) {
             A[scc[u]] += 1 /* a[u] */;  // 压缩节点信息
@@ -76,13 +76,14 @@ struct StronglyConnectedComponentKosarajuAlgorithm {
     }
 
     vector<int> calc_dag() {
+        const ll INIT_F_TAG = -1LL;  // 以-1表示未访问
         auto init_f_dag = [&]() {
             F.resize(scc_cnt + 2);
-            fill(F.begin(), F.end(), -1);  // 以-1表示未访问
+            fill(F.begin(), F.end(), INIT_F_TAG);  // 以-1表示未访问
         };
         auto dfs_f_dag = [&](auto& self, int scc_u) {
-            if (F[scc_u] != -1) return F[scc_u];
-            int res = 0;
+            if (F[scc_u] != INIT_F_TAG) return F[scc_u];
+            ll res = 0LL;
             for (const auto& scc_v : DAG[scc_u]) {
                 // 统计以节点scc_u为起点的路径的最优信息
                 res = max(res, self(self, scc_v));
@@ -99,4 +100,7 @@ struct StronglyConnectedComponentKosarajuAlgorithm {
         }
         return ans;
     }
-};
+
+}  // namespace StronglyConnectedComponentKosarajuAlgorithm
+
+using namespace StronglyConnectedComponentKosarajuAlgorithm;
