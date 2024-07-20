@@ -172,7 +172,7 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
 
     void build_dag() {  // 对缩点之后的图建立DAG
         fill(A + 1, A + 1 + scc_cnt, 0LL);
-        for (int i = 1; i <= n; ++i) DAG[i].clear();
+        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) DAG[scc_u].clear();
 
         for (int u = 1; u <= n; ++u) {
             A[scc[u]] += a[u];  // 压缩节点信息
