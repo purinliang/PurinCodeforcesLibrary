@@ -4,53 +4,51 @@ typedef long long ll;
 
 const int MAXN = 3e5 + 10;
 
-const int MAXN = 3e5 + 10;
+int n;  // 节点数量
 
+/**
+ * BiconnectedComponent - TarjanAlgorithm
+ *
+ * problem: https://www.luogu.com.cn/problem/P3388
+ * submission: https://www.luogu.com.cn/record/167339410
+ */
 namespace BiconnectedComponent {
 
-    int n, m;
-    vector<int> G[MAXN];
+    vector<vector<int>> G;
 
     void init() {
+        G.resize(n + 2);
         for (int i = 1; i <= n; ++i) G[i].clear();
     }
 
-    void add_edge(int u, int v) {
-        // 注意是无向图，主函数要调用两次
-        // add_edge(u, v);
-        // add_edge(v, u);
-        G[u].push_back(v);
+    void add_undirected_edge(int u, int v) {
+        G[u].push_back(v), G[v].push_back(u);
     }
 
-    int dfn[MAXN];
-    int low[MAXN];
-    int dfn_cnt;
+    vector<bool> cut_vertex;
 
-    bool cut_vertex[MAXN];
+    void calc_cut_vertex() {
+        cut_vertex.clear(), cut_vertex.resize(n + 2);
 
-    void tarjan(int u, int root) {
-        ++dfn_cnt, dfn[u] = dfn_cnt, low[u] = dfn_cnt;
-        int chd_cnt = 0;  // be used for check whether root is cut vertex
-        for (const auto& v : G[u]) {
-            if (!dfn[v]) {
-                ++chd_cnt;
-                tarjan(v, root);
-                low[u] = min(low[u], low[v]);
-                if (u != root && low[v] >= dfn[u]) cut_vertex[u] = true;
+        int dfn_cnt = 0;
+        vector<int> dfn(n + 2), low(n + 2);
+        auto tarjan = [&](auto& self, int u, int root) -> void {
+            ++dfn_cnt, dfn[u] = dfn_cnt, low[u] = dfn_cnt;
+            int chd_cnt = 0;  // be used for check whether root is cut vertex
+            for (const auto& v : G[u]) {
+                if (!dfn[v]) {
+                    ++chd_cnt;
+                    self(self, v, root);
+                    low[u] = min(low[u], low[v]);
+                    if (u != root && low[v] >= dfn[u]) cut_vertex[u] = true;
+                }
+                low[u] = min(low[u], dfn[v]);
             }
-            low[u] = min(low[u], dfn[v]);
-        }
-        if (u == root && chd_cnt >= 2) cut_vertex[u] = true;
-    }
+            if (u == root && chd_cnt >= 2) cut_vertex[u] = true;
+        };
 
-    void calc_cut() {
-        fill(dfn + 1, dfn + 1 + n, 0);
-        fill(low + 1, low + 1 + n, 0);
-        dfn_cnt = 0;
-        fill(cut_vertex + 1, cut_vertex + 1 + n, false);
-        for (int i = 1; i <= n; ++i) {
-            if (!dfn[i]) tarjan(i, i);
-        }
+        for (int i = 1; i <= n; ++i)
+            if (!dfn[i]) tarjan(tarjan, i, i);
     }
 
     // 如果某个点是割点，那么去掉之后，连通块的数量会增加
