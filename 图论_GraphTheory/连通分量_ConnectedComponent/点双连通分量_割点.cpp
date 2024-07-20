@@ -11,6 +11,9 @@ int n;  // 节点数量
  *
  * problem: https://www.luogu.com.cn/problem/P3388
  * submission: https://www.luogu.com.cn/record/167339410
+ *
+ * problem: https://www.luogu.com.cn/problem/P3469
+ *
  */
 namespace BiconnectedComponent {
 
@@ -50,6 +53,8 @@ namespace BiconnectedComponent {
         for (int i = 1; i <= n; ++i)
             if (!dfn[i]) tarjan(tarjan, i, i);
     }
+
+    // 下面的代码是点双连通分量缩点，还需要进一步优化，注意割点被点双连通分量共用。
 
     // 如果某个点是割点，那么去掉之后，连通块的数量会增加
     // 有个简单的办法，把割点堵住，然后每个块进行一次dfs
