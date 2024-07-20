@@ -13,7 +13,6 @@ int n;  // 节点数量
  * submission: https://www.luogu.com.cn/record/167339410
  *
  * problem: https://www.luogu.com.cn/problem/P3469
- *
  */
 namespace BiconnectedComponent {
 
@@ -59,7 +58,7 @@ namespace BiconnectedComponent {
     // 如果某个点是割点，那么去掉之后，连通块的数量会增加
     // 有个简单的办法，把割点堵住，然后每个块进行一次dfs
     // 就可以得到每一个点双连通分量的等价点（点双连通缩点）
-    // 进行点双连通缩点之后得到森林。
+    // 进行点双连通缩点之后得到森林。需要去除平行边和自环！
     // https://www.luogu.com.cn/problem/P3469
 
     int bcc_cnt;
