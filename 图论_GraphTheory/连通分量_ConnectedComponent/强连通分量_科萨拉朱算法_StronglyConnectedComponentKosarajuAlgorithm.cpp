@@ -32,36 +32,28 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         G[u].push_back(v), GT[v].push_back(u);
     }
 
-    bool vis[MAXN];
-    vector<int> stk;
-    int scc_cnt;
-    // scc[u] == id: 节点u属于第id个SCC
-    int scc[MAXN];
-
-    void dfs_1(int u) {
-        if (vis[u]) return;
-        vis[u] = true;
-        for (const auto& v : G[u]) dfs_1(v);
-        stk.push_back(u);
-    }
-
-    void dfs_2(int u, int scc_id) {
-        scc[u] = scc_id;
-        for (const auto& v : GT[u]) {
-            if (scc[v] == 0) dfs_2(v, scc_id);
-        }
-    }
+    int scc_cnt, scc[MAXN];  // scc[u] == id: 节点u属于第id个SCC
 
     void kosaraju() {
-        fill(vis + 1, vis + 1 + n, false);
-        stk.clear();
-        for (int i = 1; i <= n; ++i) dfs_1(i);
+        vector<int> stk;
+        vector<bool> vis(n + 2);
+        auto dfs_1 = [&](auto& self, int u) -> void {
+            if (vis[u]) return;
+            vis[u] = true;
+            for (const auto& v : G[u]) self(self, v);
+            stk.push_back(u);
+        };
+        for (int u = 1; u <= n; ++u) dfs_1(dfs_1, u);
 
-        scc_cnt = 0;
-        fill(scc + 1, scc + 1 + n, 0);
-        reverse(stk.begin(), stk.end());
-        for (const auto& u : stk) {
-            if (scc[u] == 0) dfs_2(u, ++scc_cnt);
+        scc_cnt = 0, fill(scc + 1, scc + 1 + n, 0);
+        auto dfs_2 = [&](auto& self, int u, int scc_id) -> void {
+            scc[u] = scc_id;
+            for (const auto& v : GT[u]) {
+                if (scc[v] == 0) self(self, v, scc_id);
+            }
+        };
+        for (int i = stk.size() - 1; i >= 0; --i) {
+            if (int u = stk[i]; scc[u] == 0) dfs_2(dfs_2, u, ++scc_cnt);
         }
     }
 
