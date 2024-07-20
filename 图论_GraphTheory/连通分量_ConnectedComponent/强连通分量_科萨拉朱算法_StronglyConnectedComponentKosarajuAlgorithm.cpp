@@ -10,10 +10,6 @@ int a[MAXN];  // 节点的信息
 /**
  * StronglyConnectedComponent - KosarajuAlgorithm
  *
- * KosarajuAlgorithm and TopoSort require the TransposedGraph,
- * costing extra memory usage. To find a faster way to solve the
- * same problem, see TarjanAlgorithm and MemorizedSearch.
- *
  * problem: https://www.luogu.com.cn/problem/B3609
  * submission: https://www.luogu.com.cn/record/166846520 July 18, 2024
  *
@@ -22,17 +18,19 @@ int a[MAXN];  // 节点的信息
  */
 namespace StronglyConnectedComponentKosarajuAlgorithm {
 
-    vector<int> G[MAXN], GT[MAXN];  // Transposed Graph
+    vector<vector<int>> G, GT;  // Transposed Graph
 
     void init() {
+        G.resize(n + 2), GT.resize(n + 2);
         for (int i = 1; i <= n; ++i) G[i].clear(), GT[i].clear();
     }
 
-    void add_edge(int u, int v) {
+    void add_directed_edge(int u, int v) {
         G[u].push_back(v), GT[v].push_back(u);
     }
 
-    int scc_cnt, scc[MAXN];  // scc[u] == id: 节点u属于第id个SCC
+    int scc_cnt;
+    vector<int> scc;  // scc[u] == id: 节点u属于第id个SCC
 
     void kosaraju() {
         vector<int> stk;
@@ -45,7 +43,7 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         };
         for (int u = 1; u <= n; ++u) dfs_1(dfs_1, u);
 
-        scc_cnt = 0, fill(scc + 1, scc + 1 + n, 0);
+        scc_cnt = 0, scc.clear(), scc.resize(n + 2);
         auto dfs_2 = [&](auto& self, int u, int scc_id) -> void {
             scc[u] = scc_id;
             for (const auto& v : GT[u]) {
@@ -57,13 +55,13 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
         }
     }
 
-    vector<int> DAG[MAXN];  // 缩点后的DAG，节点为scc_u
-    ll A[MAXN];             // 节点scc_u的压缩信息
-    ll F[MAXN];             // 从节点scc_u的开始的路径的最优信息
+    vector<vector<int>> DAG;  // 缩点后的DAG，节点为scc_u
+    vector<ll> A;             // 节点scc_u的压缩信息
+    vector<ll> F;             // 从节点scc_u的开始的路径的最优信息
 
     void build_dag() {  // 对缩点之后的图建立DAG
-        fill(A + 1, A + 1 + scc_cnt, 0LL);
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) DAG[scc_u].clear();
+        DAG.clear(), DAG.resize(scc_cnt + 2);
+        A.clear(), A.resize(scc_cnt + 2);
 
         for (int u = 1; u <= n; ++u) {
             A[scc[u]] += a[u];  // 压缩节点信息
@@ -82,11 +80,13 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
     }
 
     ll calc_dag() {
+        const ll INIT_F_TAG = -1LL;  // 以-1表示未访问
         auto init_f_dag = [&]() {
-            fill(F + 1, F + 1 + scc_cnt, -1LL);  // 以-1表示未访问
+            F.clear(), F.resize(scc_cnt + 2);
+            fill(F.begin(), F.end(), INIT_F_TAG);
         };
         auto dfs_f_dag = [&](auto& self, int scc_u) {
-            if (F[scc_u] != -1) return F[scc_u];
+            if (F[scc_u] != INIT_F_TAG) return F[scc_u];
             ll res = 0LL;
             for (const auto& scc_v : DAG[scc_u]) {
                 // 统计以节点scc_u为起点的路径的最优信息
