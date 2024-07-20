@@ -176,28 +176,28 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
 
     vector<int> DAG[MAXN];  // 缩点后的DAG，节点为scc_u
     ll A[MAXN];             // 节点scc_u的压缩信息
-    ll F[MAXN];             // 从节点scc_u的开始的路径的压缩信息
+    ll F[MAXN];             // 从节点scc_u的开始的路径的最优信息
 
     void build_dag() {  // 对缩点之后的图建立DAG
         fill(A + 1, A + 1 + scc_cnt, 0LL);
         for (int i = 1; i <= n; ++i) DAG[i].clear();
 
         for (int u = 1; u <= n; ++u) {
-            A[scc[u]] += a[u];
+            A[scc[u]] += a[u];  // 压缩节点信息
             for (const auto& v : G[u]) {
-                if (scc[u] == scc[v]) continue;  // 去除自环，不一定有必要
+                if (scc[u] == scc[v]) continue;  // 去除自环，一般有必要
                 DAG[scc[u]].push_back(scc[v]);
             }
         }
 
-        // 去除平行边，不一定有必要
-        auto sort_unique = [](vector<int>& vec) {
-            sort(vec.begin(), vec.end());
-            vec.erase(unique(vec.begin(), vec.end()), vec.end());
-        };
-        for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
-            sort_unique(DAG[scc_u]);
-        }
+        // // 去除平行边，一般没有必要
+        // auto sort_unique = [](vector<int>& vec) {
+        //     sort(vec.begin(), vec.end());
+        //     vec.erase(unique(vec.begin(), vec.end()), vec.end());
+        // };
+        // for (int scc_u = 1; scc_u <= scc_cnt; ++scc_u) {
+        //     sort_unique(DAG[scc_u]);
+        // }
     }
 
     ll calc_dag() {
@@ -208,9 +208,10 @@ namespace StronglyConnectedComponentKosarajuAlgorithm {
             if (F[scc_u] != -1) return F[scc_u];
             ll res = 0LL;
             for (const auto& scc_v : DAG[scc_u]) {
+                // 统计以节点scc_u为起点的路径的最优信息
                 res = max(res, self(self, scc_v));
             }
-            res += A[scc_u];
+            res += A[scc_u];  // 加上节点scc_u的压缩信息
             F[scc_u] = res;
             return res;
         };
