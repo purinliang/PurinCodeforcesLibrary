@@ -2,6 +2,10 @@
 using namespace std;
 typedef long long ll;
 
+/** MOD must be a very big prime (e.g. at least 1e6),
+ * and bigger than max(n) */
+const int MOD = 998244353;
+
 /**
  * Combinatorics
  *
@@ -11,9 +15,6 @@ typedef long long ll;
  */
 struct Combinatorics {
    private:
-    /** MOD must be a very big prime (e.g. at least 1e6),
-     * and bigger than max(n) */
-    const int MOD = 998244353;
     vector<int> fac, inv_fac;
 
     ll qpow(ll x, ll n) {
