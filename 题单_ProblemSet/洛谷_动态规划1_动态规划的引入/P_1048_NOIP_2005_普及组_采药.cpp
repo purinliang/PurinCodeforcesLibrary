@@ -2,6 +2,7 @@
 using namespace std;
 typedef long long ll;
 
+const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 
 const int MAXN = 3e5 + 10;
