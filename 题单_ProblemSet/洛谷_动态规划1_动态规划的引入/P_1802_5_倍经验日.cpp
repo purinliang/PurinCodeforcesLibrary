@@ -5,11 +5,12 @@ typedef long long ll;
 const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 const int MAXN = 3e5 + 10;
+const int MAXM = 3e5 + 10;
 
 int n, m;
 
 ll v[MAXN], w[MAXN];
-ll dp[MAXN];
+ll dp[MAXM];
 
 int main() {
     cin >> n >> m;
