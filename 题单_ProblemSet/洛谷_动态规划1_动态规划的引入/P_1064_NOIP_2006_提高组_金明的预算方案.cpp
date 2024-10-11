@@ -37,6 +37,7 @@ int main() {
     for (int i = 1; i <= n; ++i) {
         int t = i & 1;
         for (int j = 0; j <= m; ++j) {
+            // 购买第i个主件，从购买/不购买第i-1个主件转移
             dp[t][0][j] = max(dp[1 - t][0][j], dp[1 - t][1][j]);
             dp[t][1][j] = -LINF;
         }
@@ -44,10 +45,12 @@ int main() {
             continue;
         }
         for (int j = m; j >= w[i]; --j) {
+            // 购买第i个主件，从不购买第i个主件转移，而不是只从不购买第i-1个主件转移
             dp[t][1][j] = max(dp[t][1][j], dp[t][0][j - w[i]] + v[i]);
         }
         for (int chi : ch[i]) {
             for (int j = m; j >= w[chi]; --j) {
+                // 购买第chi个附件，从购买第i个主件转移
                 dp[t][1][j] = max(dp[t][1][j], dp[t][1][j - w[chi]] + v[chi]);
             }
         }
