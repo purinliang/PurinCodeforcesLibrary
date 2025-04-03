@@ -3,7 +3,7 @@ using namespace std;
 typedef long long ll;
 
 #ifdef LOCAL
-#include ".\标准本地调试_StandardLocalDebug.h"
+#include "工具_Tools/比赛模板_CompetitionTemplate/标准本地调试_StandardLocalDebug.h"
 #else
 #define D(...)
 #define DN(arr, n)
@@ -16,11 +16,12 @@ void _RD(T& var) {
 }
 
 void _RD(char* var) {
-    cin >> (var + 1);
+    string str;
+    cin >> str;
+    strcpy(var + 1, str.c_str());
 }
 
-void RD() {
-}
+void RD() {}
 
 template <typename T, typename... U>
 void RD(T& Head, U&... Tail) {
@@ -40,18 +41,23 @@ void _WT(const T& var) {
     cout << var;
 }
 
-void _WT(const char* var) {
-    cout << (var + 1);
-}
+void _WT(const char* var) { cout << (var + 1); }
 
-void WT() {
-}
+void WT() {}
 
 template <typename T, typename... U>
 void WT(const T& Head, const U&... Tail) {
     _WT(Head);
     cout << (sizeof...(Tail) ? " " : "\n");
     WT(Tail...);
+}
+
+void WTY(bool var, bool capital = false) {
+    if (capital) {
+        cout << (var ? "YES" : "NO") << "\n";
+    } else {
+        cout << (var ? "Yes" : "No") << "\n";
+    }
 }
 
 template <typename T>
@@ -70,7 +76,7 @@ void purin_ios() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 #define endl "\n"
-    // fflush(stdout);
+#define fout fflush(stdout)
 }
 
 void purin_init();
@@ -108,250 +114,219 @@ const int INF = 0x3F3F3F3F;
 const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
 const int MAXN = 3e5 + 10;
 
-void purin_init() {
-}
+void purin_init() {}
 
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 
+/* --- Template Begin --- */
+
+template <typename NodeInfo, typename NodeTag>
 struct SegmentTree {
-#define USING_MIN_MAX
    private:
-    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
-    static const ll INF = 0x3F3F3F3F;
-
-    struct Node {
-        int _lidx = INF, _ridx = -INF;
-        ll _add_tag = 0LL;
-        pair<bool, ll> _set_tag = {false, 0LL};
-        ll _sum = 0LL;
-#ifdef USING_MIN_MAX
-        ll _min = LINF;
-        ll _max = -LINF;
-#endif
-
-        Node() {
-        }
-
-        Node(int _l, int _r) {
-            _lidx = _l, _ridx = _r;
-        }
-
-        string to_string() {
-            return std::to_string(_sum);
-            string res = "";
-            res += "[" + std::to_string(_lidx) + ", " + std::to_string(_ridx) + "] ";
-            res += "sum = " + std::to_string(_sum) + ", ";
-#ifdef USING_MIN_MAX
-            res += "min = " + std::to_string(_min) + ", ";
-            res += "max = " + std::to_string(_max) + ", ";
-#endif
-            res = res.substr(0, std::max(0, (int)res.length() - 2));
-            return res;
-        }
-
-        void add(ll val) {
-            _add_tag += val;
-            _sum += 1LL * (_ridx - _lidx + 1) * val;
-#ifdef USING_MIN_MAX
-            _min += val;
-            _max += val;
-#endif
-        }
-
-        void Set(ll val) {
-            _set_tag = {true, val};
-            _sum = 1LL * (_ridx - _lidx + 1) * val;
-#ifdef USING_MIN_MAX
-            _min = val;
-            _max = val;
-#endif
-        }
-
-        void Merge(Node& lch_node, Node& rch_node) {
-            _lidx = std::min(lch_node._lidx, rch_node._lidx);
-            _ridx = std::max(lch_node._ridx, rch_node._ridx);
-            _sum = lch_node._sum + rch_node._sum;
-#ifdef USING_MIN_MAX
-            _min = std::min(lch_node._min, rch_node._min);
-            _max = std::max(lch_node._max, rch_node._max);
-#endif
-        }
-    };
-
     int _n;
-    vector<Node> _node;
+    vector<NodeInfo> _info;
+    vector<NodeTag> _tag;
 
-#define lch (u << 1)
-#define rch (u << 1 | 1)
-#define mid ((l + r) >> 1)
+    inline int lch(int u) { return u * 2; }
+    inline int rch(int u) { return u * 2 + 1; }
+    inline int mid(int l, int r) { return (l + r) / 2; }
 
-    void pull_up(int u) {
-        _node[u].Merge(_node[lch], _node[rch]);
-    }
+    void pull_up(int u, int l, int r) { _info[u] = NodeInfo(l, r, _info[lch(u)], _info[rch(u)]); }
 
-    void push_down(int u) {
-        if (_node[u]._add_tag != 0LL) {
-            _node[lch].add(_node[u]._add_tag);
-            _node[rch].add(_node[u]._add_tag);
-            _node[u]._add_tag = 0LL;
-        }
+    void push_down(int u, int l, int r) {
+        _info[lch(u)].apply_tag(l, mid(l, r), _tag[u]);
+        _info[rch(u)].apply_tag(mid(l, r) + 1, r, _tag[u]);
+        _tag[lch(u)].apply_tag(l, mid(l, r), _tag[u]);
+        _tag[rch(u)].apply_tag(mid(l, r) + 1, r, _tag[u]);
+        _tag[u] = NodeTag();
     }
 
     void build(int u, int l, int r) {
         if (l == r) {
-            _node[u] = Node(l, r);
+            _info[u] = NodeInfo();
+            _tag[u] = NodeTag();
             return;
         }
-        build(lch, l, mid);
-        build(rch, mid + 1, r);
-        pull_up(u);
+        build(lch(u), l, mid(l, r));
+        build(rch(u), mid(l, r) + 1, r);
+        pull_up(u, l, r);
     }
 
-    void add(int u, int l, int r, int L, int R, ll val) {
+    void update(int u, int l, int r, int L, int R, const NodeTag& upd_tag) {
         if (L > R || L > r || R < l) {
             return;
         }
         if (L <= l && r <= R) {
-            _node[u].add(val);
+            _info[u].apply_tag(l, r, upd_tag);
+            _tag[u].apply_tag(l, r, upd_tag);
             return;
         }
-        push_down(u);
-        add(lch, l, mid, L, R, val);
-        add(rch, mid + 1, r, L, R, val);
-        pull_up(u);
+        push_down(u, l, r);
+        update(lch(u), l, mid(l, r), L, R, upd_tag);
+        update(rch(u), mid(l, r) + 1, r, L, R, upd_tag);
+        pull_up(u, l, r);
     }
 
-    // void set(int u, int l, int r, int L, int R, ll val) {
-    //     if (L > R || L > r || R < l) {
-    //         return;
-    //     }
-    //     if (L <= l && r <= R) {
-    //         node[u].set(val);
-    //         return;
-    //     }
-    //     push_down(u);
-    //     set(lch, l, mid, L, R, val);
-    //     set(rch, mid + 1, r, L, R, val);
-    //     pull_up(u);
-    // }
-
-    Node query(int u, int l, int r, int L, int R) {
+    NodeInfo query(int u, int l, int r, int L, int R) {
         if (L > R || L > r || R < l) {
-            return Node();
+            return NodeInfo();
         }
         if (L <= l && r <= R) {
-            return _node[u];
+            return _info[u];
         }
-        push_down(u);
-        Node l_res = query(lch, l, mid, L, R);
-        Node r_res = query(rch, mid + 1, r, L, R);
-        Node res;
-        res.Merge(l_res, r_res);
+        push_down(u, l, r);
+        NodeInfo lres = query(lch(u), l, mid(l, r), L, R);
+        NodeInfo rres = query(rch(u), mid(l, r) + 1, r, L, R);
+        NodeInfo res = NodeInfo(l, r, lres, rres);
         return res;
     }
-
-    string to_string(int u, int l, int r, int dep, int dir) {
-        const int LEFT = 0, RIGHT = 1;
-        string res = "";
-        if (l < r) {
-            res += to_string(lch, l, mid, dep + 1, LEFT);
-        }
-        string indent = "    ";
-        for (int i = 1; i <= dep; ++i) {
-            res += indent;
-        }
-        if (dir == LEFT) {
-            res += "/ ";
-        } else if (dir == RIGHT) {
-            res += "\\ ";
-        }
-        res += _node[u].to_string() + "\n";
-        if (l < r) {
-            res += to_string(rch, mid + 1, r, dep + 1, RIGHT);
-        }
-        return res;
-    }
-
-#undef lch
-#undef rch
-#undef mid
 
    public:
     void build(int n) {
         _n = n;
-        _node.clear();
-        _node.resize(4 * _n);
+        _info.clear(), _info.resize(4 * (_n + 2));
+        _tag.clear(), _tag.resize(4 * (_n + 2));
         build(1, 1, _n);
     }
 
-    void add(int L, int R, ll val) {
-        add(1, 1, _n, L, R, val);
+    void update(int L, int R, const NodeTag& upd_tag) { update(1, 1, _n, L, R, upd_tag); }
+
+    NodeInfo query(int L, int R) { return query(1, 1, _n, L, R); }
+};
+
+struct NodeTag {
+    NodeTag() {};
+    void apply_tag(int l, int r, const NodeTag& tag) {}
+};
+
+struct NodeInfo {
+    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
+    NodeInfo() {}
+    NodeInfo(int l, int r, const NodeInfo& lch, const NodeInfo& rch) {}
+    void apply_tag(int l, int r, const NodeTag& tag) {}
+};
+
+/* --- Template End --- */
+
+/*
+    This template is designed for most used in daily training, including:
+        NodeTag: Add or Set
+        NodeInfo: Sum or MinMax
+    If you need your costomized template, please see SegmentTree2
+*/
+
+struct NodeTagAdd : NodeTag {
+    ll _add_tag = 0LL;
+    NodeTagAdd(ll val = 0LL) { _add_tag = val; }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _add_tag += tag._add_tag;
+        }
     }
+};
 
-    // void set(int L, int R, ll val) {
-    //     set(1, 1, n, L, R, val);
-    // }
-
-    Node query(int L, int R) {
-        return query(1, 1, _n, L, R);
+struct NodeTagSet : NodeTag {
+    pair<bool, ll> _set_tag = {false, 0LL};
+    NodeTagSet(ll val = 0LL, bool set = false) {
+        if (set) {
+            _set_tag = {true, val};
+        }
     }
-
-    ll sum(int L, int R) {
-        return query(L, R)._sum;
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _set_tag = tag._set_tag;
+        }
     }
+};
 
-#ifdef USING_MIN_MAX
-    ll min(int L, int R) {
-        return query(L, R)._min;
+struct NodeInfoSum : NodeInfo {
+    ll _sum = 0LL;
+    NodeInfoSum() {}
+    NodeInfoSum(int l, int r, const NodeInfoSum& lch, const NodeInfoSum& rch) { _sum = lch._sum + rch._sum; }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _sum += 1LL * (r - l + 1) * tag._add_tag;
+        }
     }
-
-    ll max(int L, int R) {
-        return query(L, R)._max;
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
+        }
     }
-#endif
+};
 
-    string to_string() {
-        string res = "SegmentTree = [";
-        res += "\n" + to_string(1, 1, _n, 1, -1);
-        res += "]";
-        return res;
+struct NodeInfoMinMax : NodeInfo {
+    ll _min = LINF;
+    ll _max = -LINF;
+    NodeInfoMinMax() {}
+    NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch, const NodeInfoMinMax& rch) {
+        _min = std::min(lch._min, rch._min), _max = std::max(lch._max, rch._max);
     }
-
-    void show() {
-#ifdef LOCAL
-        cout << "[D] " << to_string() << endl;
-#endif
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _min += tag._add_tag, _max += tag._add_tag;
+        }
     }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _min = tag._set_tag.second, _max = tag._set_tag.second;
+        }
+    }
+};
 
-#undef USING_MIN_MAX
+struct NodeInfoSumMinMax : NodeInfo {
+    ll _sum = 0LL;
+    ll _min = LINF;
+    ll _max = -LINF;
+    NodeInfoSumMinMax() {}
+    NodeInfoSumMinMax(int l, int r, const NodeInfoSumMinMax& lch, const NodeInfoSumMinMax& rch) {
+        _sum = lch._sum + rch._sum;
+        _min = std::min(lch._min, rch._min);
+        _max = std::max(lch._max, rch._max);
+    }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _sum += 1LL * (r - l + 1) * tag._add_tag;
+            _min += tag._add_tag;
+            _max += tag._add_tag;
+        }
+    }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
+            _min = tag._set_tag.second;
+            _max = tag._set_tag.second;
+        }
+    }
+};
 
-} st;
+/* How to use */
+SegmentTree<NodeInfoSum, NodeTagAdd> st;
 
 int n, m;
-int a[MAXN];
+ll a[MAXN];
 
 void purin_solve() {
     RD(n, m);
     RDN(a, n);
     st.build(n);
     for (int i = 1; i <= n; ++i) {
-        st.add(i, i, a[i]);
+        st.update(i, i, a[i]);
     }
-    st.show();
     while (m--) {
         int opt;
         RD(opt);
         if (opt == 1) {
-            int l, r, k;
+            int l, r;
+            ll k;
             RD(l, r, k);
-            st.add(l, r, k);
-            st.show();
+            st.update(l, r, k);
         } else if (opt == 2) {
             int l, r;
             RD(l, r);
-            ll res = st.sum(l, r);
+            ll res = st.query(l, r)._sum;
             WT(res);
         }
     }
