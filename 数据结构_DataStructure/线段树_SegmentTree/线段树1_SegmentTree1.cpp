@@ -15,9 +15,7 @@ struct SegmentTree {
     inline int rch(int u) { return u * 2 + 1; }
     inline int mid(int l, int r) { return (l + r) / 2; }
 
-    void pull_up(int u, int l, int r) {
-        _info[u] = NodeInfo(l, r, _info[lch(u)], _info[rch(u)]);
-    }
+    void pull_up(int u, int l, int r) { _info[u] = NodeInfo(l, r, _info[lch(u)], _info[rch(u)]); }
 
     void push_down(int u, int l, int r) {
         _info[lch(u)].apply_tag(l, mid(l, r), _tag[u]);
@@ -75,9 +73,7 @@ struct SegmentTree {
         build(1, 1, _n);
     }
 
-    void update(int L, int R, const NodeTag& upd_tag) {
-        update(1, 1, _n, L, R, upd_tag);
-    }
+    void update(int L, int R, const NodeTag& upd_tag) { update(1, 1, _n, L, R, upd_tag); }
 
     NodeInfo query(int L, int R) { return query(1, 1, _n, L, R); }
 };
@@ -130,9 +126,7 @@ struct NodeTagSet : NodeTag {
 struct NodeInfoSum : NodeInfo {
     ll _sum = 0LL;
     NodeInfoSum() {}
-    NodeInfoSum(int l, int r, const NodeInfoSum& lch, const NodeInfoSum& rch) {
-        _sum = lch._sum + rch._sum;
-    }
+    NodeInfoSum(int l, int r, const NodeInfoSum& lch, const NodeInfoSum& rch) { _sum = lch._sum + rch._sum; }
     void apply_tag(int l, int r, const NodeTagAdd& tag) {
         if (tag._add_tag != 0LL) {
             _sum += 1LL * (r - l + 1) * tag._add_tag;
@@ -146,12 +140,11 @@ struct NodeInfoSum : NodeInfo {
 };
 
 struct NodeInfoMinMax : NodeInfo {
-    ll _min = LINF, _max = -LINF;
+    ll _min = LINF;
+    ll _max = -LINF;
     NodeInfoMinMax() {}
-    NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch,
-                   const NodeInfoMinMax& rch) {
-        _min = std::min(lch._min, rch._min),
-        _max = std::max(lch._max, rch._max);
+    NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch, const NodeInfoMinMax& rch) {
+        _min = std::min(lch._min, rch._min), _max = std::max(lch._max, rch._max);
     }
     void apply_tag(int l, int r, const NodeTagAdd& tag) {
         if (tag._add_tag != 0LL) {
@@ -167,26 +160,29 @@ struct NodeInfoMinMax : NodeInfo {
 
 struct NodeInfoSumMinMax : NodeInfo {
     ll _sum = 0LL;
-    ll _min = LINF, _max = -LINF;
+    ll _min = LINF;
+    ll _max = -LINF;
     NodeInfoSumMinMax() {}
-    NodeInfoSumMinMax(int l, int r, const NodeInfoSumMinMax& lch,
-                      const NodeInfoSumMinMax& rch) {
+    NodeInfoSumMinMax(int l, int r, const NodeInfoSumMinMax& lch, const NodeInfoSumMinMax& rch) {
         _sum = lch._sum + rch._sum;
-        _min = std::min(lch._min, rch._min),
+        _min = std::min(lch._min, rch._min);
         _max = std::max(lch._max, rch._max);
     }
     void apply_tag(int l, int r, const NodeTagAdd& tag) {
         if (tag._add_tag != 0LL) {
             _sum += 1LL * (r - l + 1) * tag._add_tag;
-            _min += tag._add_tag, _max += tag._add_tag;
+            _min += tag._add_tag;
+            _max += tag._add_tag;
         }
     }
     void apply_tag(int l, int r, const NodeTagSet& tag) {
         if (tag._set_tag.first != false) {
             _sum = 1LL * (r - l + 1) * tag._set_tag.second;
-            _min = tag._set_tag.second, _max = tag._set_tag.second;
+            _min = tag._set_tag.second;
+            _max = tag._set_tag.second;
         }
     }
 };
 
+/* How to use */
 SegmentTree<NodeInfoSum, NodeTagAdd> st;
