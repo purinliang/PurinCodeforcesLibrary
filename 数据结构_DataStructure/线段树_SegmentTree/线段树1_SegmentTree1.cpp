@@ -4,12 +4,24 @@ typedef long long ll;
 
 /* --- Template Begin --- */
 
-template <typename NodeInfo, typename NodeTag>
+struct NodeTag {
+    NodeTag() {};
+    void apply_tag(int l, int r, const NodeTag& tag) {}
+};
+
+
+struct NodeInfo {
+    NodeInfo() {}
+    NodeInfo(int l, int r, const NodeInfo& lch, const NodeInfo& rch) {}
+    void apply_tag(int l, int r, const NodeTag& tag) {}
+};
+
+template <typename NodeTag, typename NodeInfo>
 struct SegmentTree {
    private:
     int _n;
-    vector<NodeInfo> _info;
     vector<NodeTag> _tag;
+    vector<NodeInfo> _info;
 
     inline int lch(int u) { return u * 2; }
     inline int rch(int u) { return u * 2 + 1; }
@@ -78,18 +90,6 @@ struct SegmentTree {
     NodeInfo query(int L, int R) { return query(1, 1, _n, L, R); }
 };
 
-struct NodeTag {
-    NodeTag() {};
-    void apply_tag(int l, int r, const NodeTag& tag) {}
-};
-
-struct NodeInfo {
-    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
-    NodeInfo() {}
-    NodeInfo(int l, int r, const NodeInfo& lch, const NodeInfo& rch) {}
-    void apply_tag(int l, int r, const NodeTag& tag) {}
-};
-
 /* --- Template End --- */
 
 /*
@@ -140,25 +140,30 @@ struct NodeInfoSum : NodeInfo {
 };
 
 struct NodeInfoMinMax : NodeInfo {
+    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
     ll _min = LINF;
     ll _max = -LINF;
     NodeInfoMinMax() {}
     NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch, const NodeInfoMinMax& rch) {
-        _min = std::min(lch._min, rch._min), _max = std::max(lch._max, rch._max);
+        _min = std::min(lch._min, rch._min);
+        _max = std::max(lch._max, rch._max);
     }
     void apply_tag(int l, int r, const NodeTagAdd& tag) {
         if (tag._add_tag != 0LL) {
-            _min += tag._add_tag, _max += tag._add_tag;
+            _min += tag._add_tag;
+            _max += tag._add_tag;
         }
     }
     void apply_tag(int l, int r, const NodeTagSet& tag) {
         if (tag._set_tag.first != false) {
-            _min = tag._set_tag.second, _max = tag._set_tag.second;
+            _min = tag._set_tag.second;
+            _max = tag._set_tag.second;
         }
     }
 };
 
 struct NodeInfoSumMinMax : NodeInfo {
+    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
     ll _sum = 0LL;
     ll _min = LINF;
     ll _max = -LINF;
@@ -185,4 +190,4 @@ struct NodeInfoSumMinMax : NodeInfo {
 };
 
 /* How to use */
-SegmentTree<NodeInfoSum, NodeTagAdd> st;
+SegmentTree<NodeTagAdd, NodeInfoSum> st;
