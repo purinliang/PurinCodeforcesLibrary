@@ -2,18 +2,116 @@
 using namespace std;
 typedef long long ll;
 
-/* --- Template Begin --- */
+/*
+    This template is designed for most used in daily training, including:
+        NodeTag: Add or Set
+        NodeInfo: Sum or MinMax
+    If you need your costomized template, please see SegmentTree2
+*/
 
-struct NodeTag {
-    NodeTag() {};
-    void apply_tag(int l, int r, const NodeTag& tag) {}
+struct NodeTagAdd {
+    ll _add_tag = 0LL;
+    NodeTagAdd(ll val = 0LL) { _add_tag = val; }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _add_tag += tag._add_tag;
+        }
+    }
 };
 
+struct NodeTagSet {
+    pair<bool, ll> _set_tag = {false, 0LL};
+    NodeTagSet(ll val = 0LL, bool set = false) {
+        if (set) {
+            _set_tag = {true, val};
+        }
+    }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _set_tag = tag._set_tag;
+        }
+    }
+};
 
-struct NodeInfo {
-    NodeInfo() {}
-    NodeInfo(int l, int r, const NodeInfo& lch, const NodeInfo& rch) {}
-    void apply_tag(int l, int r, const NodeTag& tag) {}
+struct NodeInfoSum {
+    using value_type = ll;
+    ll _sum = 0LL;
+    NodeInfoSum() {}
+    NodeInfoSum(value_type val) {
+        _sum = val;
+    }
+    NodeInfoSum(int l, int r, const NodeInfoSum& lch, const NodeInfoSum& rch) { _sum = lch._sum + rch._sum; }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _sum += 1LL * (r - l + 1) * tag._add_tag;
+        }
+    }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
+        }
+    }
+};
+
+struct NodeInfoMinMax {
+    using value_type = ll;
+    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
+    ll _min = LINF;
+    ll _max = -LINF;
+    NodeInfoMinMax() {}
+    NodeInfoMinMax(value_type val) {
+        _min = val;
+        _max = val;
+    }
+    NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch, const NodeInfoMinMax& rch) {
+        _min = std::min(lch._min, rch._min);
+        _max = std::max(lch._max, rch._max);
+    }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _min += tag._add_tag;
+            _max += tag._add_tag;
+        }
+    }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _min = tag._set_tag.second;
+            _max = tag._set_tag.second;
+        }
+    }
+};
+
+struct NodeInfoSumMinMax {
+    using value_type = ll;
+    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
+    ll _sum = 0LL;
+    ll _min = LINF;
+    ll _max = -LINF;
+    NodeInfoSumMinMax() {}
+    NodeInfoSumMinMax(value_type val) {
+        _sum = val;
+        _min = val;
+        _max = val;
+    }
+    NodeInfoSumMinMax(int l, int r, const NodeInfoSumMinMax& lch, const NodeInfoSumMinMax& rch) {
+        _sum = lch._sum + rch._sum;
+        _min = std::min(lch._min, rch._min);
+        _max = std::max(lch._max, rch._max);
+    }
+    void apply_tag(int l, int r, const NodeTagAdd& tag) {
+        if (tag._add_tag != 0LL) {
+            _sum += 1LL * (r - l + 1) * tag._add_tag;
+            _min += tag._add_tag;
+            _max += tag._add_tag;
+        }
+    }
+    void apply_tag(int l, int r, const NodeTagSet& tag) {
+        if (tag._set_tag.first != false) {
+            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
+            _min = tag._set_tag.second;
+            _max = tag._set_tag.second;
+        }
+    }
 };
 
 template <typename NodeTag, typename NodeInfo>
@@ -37,14 +135,17 @@ struct SegmentTree {
         _tag[u] = NodeTag();
     }
 
-    void build(int u, int l, int r) {
+    void build(int u, int l, int r, typename NodeInfo::value_type* a) {
         if (l == r) {
             _info[u] = NodeInfo();
+            if (a != nullptr) {
+                _info[u] = NodeInfo(a[l]);
+            }
             _tag[u] = NodeTag();
             return;
         }
-        build(lch(u), l, mid(l, r));
-        build(rch(u), mid(l, r) + 1, r);
+        build(lch(u), l, mid(l, r), a);
+        build(rch(u), mid(l, r) + 1, r, a);
         pull_up(u, l, r);
     }
 
@@ -78,11 +179,11 @@ struct SegmentTree {
     }
 
    public:
-    void build(int n) {
+    void build(int n, typename NodeInfo::value_type* a = nullptr) {
         _n = n;
         _info.clear(), _info.resize(4 * (_n + 2));
         _tag.clear(), _tag.resize(4 * (_n + 2));
-        build(1, 1, _n);
+        build(1, 1, _n, a);
     }
 
     void update(int L, int R, const NodeTag& upd_tag) { update(1, 1, _n, L, R, upd_tag); }
@@ -92,102 +193,4 @@ struct SegmentTree {
 
 /* --- Template End --- */
 
-/*
-    This template is designed for most used in daily training, including:
-        NodeTag: Add or Set
-        NodeInfo: Sum or MinMax
-    If you need your costomized template, please see SegmentTree2
-*/
-
-struct NodeTagAdd : NodeTag {
-    ll _add_tag = 0LL;
-    NodeTagAdd(ll val = 0LL) { _add_tag = val; }
-    void apply_tag(int l, int r, const NodeTagAdd& tag) {
-        if (tag._add_tag != 0LL) {
-            _add_tag += tag._add_tag;
-        }
-    }
-};
-
-struct NodeTagSet : NodeTag {
-    pair<bool, ll> _set_tag = {false, 0LL};
-    NodeTagSet(ll val = 0LL, bool set = false) {
-        if (set) {
-            _set_tag = {true, val};
-        }
-    }
-    void apply_tag(int l, int r, const NodeTagSet& tag) {
-        if (tag._set_tag.first != false) {
-            _set_tag = tag._set_tag;
-        }
-    }
-};
-
-struct NodeInfoSum : NodeInfo {
-    ll _sum = 0LL;
-    NodeInfoSum() {}
-    NodeInfoSum(int l, int r, const NodeInfoSum& lch, const NodeInfoSum& rch) { _sum = lch._sum + rch._sum; }
-    void apply_tag(int l, int r, const NodeTagAdd& tag) {
-        if (tag._add_tag != 0LL) {
-            _sum += 1LL * (r - l + 1) * tag._add_tag;
-        }
-    }
-    void apply_tag(int l, int r, const NodeTagSet& tag) {
-        if (tag._set_tag.first != false) {
-            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
-        }
-    }
-};
-
-struct NodeInfoMinMax : NodeInfo {
-    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
-    ll _min = LINF;
-    ll _max = -LINF;
-    NodeInfoMinMax() {}
-    NodeInfoMinMax(int l, int r, const NodeInfoMinMax& lch, const NodeInfoMinMax& rch) {
-        _min = std::min(lch._min, rch._min);
-        _max = std::max(lch._max, rch._max);
-    }
-    void apply_tag(int l, int r, const NodeTagAdd& tag) {
-        if (tag._add_tag != 0LL) {
-            _min += tag._add_tag;
-            _max += tag._add_tag;
-        }
-    }
-    void apply_tag(int l, int r, const NodeTagSet& tag) {
-        if (tag._set_tag.first != false) {
-            _min = tag._set_tag.second;
-            _max = tag._set_tag.second;
-        }
-    }
-};
-
-struct NodeInfoSumMinMax : NodeInfo {
-    static const ll LINF = 0x3F3F3F3F3F3F3F3FLL;
-    ll _sum = 0LL;
-    ll _min = LINF;
-    ll _max = -LINF;
-    NodeInfoSumMinMax() {}
-    NodeInfoSumMinMax(int l, int r, const NodeInfoSumMinMax& lch, const NodeInfoSumMinMax& rch) {
-        _sum = lch._sum + rch._sum;
-        _min = std::min(lch._min, rch._min);
-        _max = std::max(lch._max, rch._max);
-    }
-    void apply_tag(int l, int r, const NodeTagAdd& tag) {
-        if (tag._add_tag != 0LL) {
-            _sum += 1LL * (r - l + 1) * tag._add_tag;
-            _min += tag._add_tag;
-            _max += tag._add_tag;
-        }
-    }
-    void apply_tag(int l, int r, const NodeTagSet& tag) {
-        if (tag._set_tag.first != false) {
-            _sum = 1LL * (r - l + 1) * tag._set_tag.second;
-            _min = tag._set_tag.second;
-            _max = tag._set_tag.second;
-        }
-    }
-};
-
-/* How to use */
-SegmentTree<NodeTagAdd, NodeInfoSum> st;
+SegmentTree<NodeTagAdd, NodeInfoSumMinMax> st;
