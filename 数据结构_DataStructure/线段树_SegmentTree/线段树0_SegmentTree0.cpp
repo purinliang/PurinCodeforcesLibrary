@@ -1,3 +1,7 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
 struct NodeTagAdd {
     ll _add_tag = 0LL;
     NodeTagAdd(ll val = 0LL) { _add_tag = val; }
