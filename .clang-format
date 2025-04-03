@@ -1,4 +1,4 @@
-https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
  
@@ -8,9 +8,9 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
-ColumnLimit: 80
+ColumnLimit: 120
 
-Standard: Cpp11
+# Standard: Cpp11
 SortIncludes: true
 
 SpaceBeforeParens: ControlStatements
@@ -18,9 +18,9 @@ SpaceBeforeParens: ControlStatements
 DerivePointerAlignment: false
 PointerAlignment: Left
 
-AllowShortBlocksOnASingleLine: Never
-AllowShortFunctionsOnASingleLine: Empty
-NamespaceIndentation: All
+# AllowShortBlocksOnASingleLine: Never
+# AllowShortFunctionsOnASingleLine: Empty
+# NamespaceIndentation: All
 # AllowShortFunctionsOnASingleLine: Inline
 # AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 # AllowShortLoopsOnASingleLine: true
