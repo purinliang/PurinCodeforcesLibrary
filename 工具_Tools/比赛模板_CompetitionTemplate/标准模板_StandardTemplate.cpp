@@ -3,7 +3,7 @@ using namespace std;
 typedef long long ll;
 
 #ifdef LOCAL
-#include ".\标准本地调试_StandardLocalDebug.h"
+#include "工具_Tools/比赛模板_CompetitionTemplate/标准本地调试_StandardLocalDebug.h"
 #else
 #define D(...)
 #define DN(arr, n)
